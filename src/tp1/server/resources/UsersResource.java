@@ -73,7 +73,7 @@ public class UsersResource implements RestUsers {
 	@Override
 	public User updateUser(String userId, String password, User user) {
 		Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; user = " + user);
-		//TODO perguntar se eu posso so chamar o metodo para nao repetir cordigo
+		//TODO perguntar se eu posso so chamar o metodo para nao repetir codigo
 
 		if(user == null){
 			Log.info("User is null.");

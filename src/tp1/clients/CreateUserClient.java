@@ -21,7 +21,7 @@ public class CreateUserClient {
 		Debug.setLogLevel( Level.FINE, Debug.SD2122 );
 		
 		if (args.length != 5) {
-			System.err.println("Use: java sd2122.aula3.clients.CreateUserClient url userId fullName email password");
+			System.err.println("Use: java tp1.clients.CreateUserClient url userId fullName email password");
 			return;
 		}
 
@@ -35,7 +35,7 @@ public class CreateUserClient {
 
 		Log.info("Sending request to server.");
 
-		var result = new sd2122.aula3.clients.RestUsersClient(URI.create(serverUrl)).createUser(u);
+		var result = new RestUsersClient(URI.create(serverUrl)).createUser(u);
 		System.out.println("Result: " + result);
 	}
 

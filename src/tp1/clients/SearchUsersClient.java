@@ -1,4 +1,4 @@
-package sd2122.aula3.clients;
+package tp1.clients;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,7 +17,7 @@ public class SearchUsersClient {
 		Debug.setLogLevel(Level.FINE, Debug.SD2122);
 		
 		if (args.length != 2) {
-			System.err.println("Use: java sd2122.aula3.clients.SearchUsersClient url userId ");
+			System.err.println("Use: java tp1.clients.SearchUsersClient url userId ");
 			return;
 		}
 
