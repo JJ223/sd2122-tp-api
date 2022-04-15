@@ -73,7 +73,6 @@ public class UsersResource implements RestUsers {
 	@Override
 	public User updateUser(String userId, String password, User user) {
 		Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; user = " + user);
-		//TODO perguntar se eu posso so chamar o metodo para nao repetir codigo
 
 		if(user == null){
 			Log.info("User is null.");
@@ -110,6 +109,20 @@ public class UsersResource implements RestUsers {
 
 	@Override
 	public List<User> searchUsers(String pattern) {
+		/**
+		Log.info("searchUsers : pattern = " + pattern);
+
+		if(pattern == null){
+			Log.info("Pattern is null.");
+			throw new WebApplicationException( Status.BAD_REQUEST );
+		}
+
+		List<User> result = new ArrayList<User>();
+		users.values().stream().forEach( u -> { if( u.getFullName().
+				indexOf(pattern) != -1) result.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); });
+		return result;
+		 */
+
 		Log.info("searchUsers : pattern = " + pattern);
 
 		if(pattern == null){
