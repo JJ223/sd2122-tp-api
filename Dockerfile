@@ -1,5 +1,5 @@
 # base image
-FROM nunopreguica/sd2122tpbase
+FROM nunopreguica/sd2122tpbase2
 
 # working directory inside docker image
 WORKDIR /home/sd
@@ -13,3 +13,4 @@ COPY trab.props trab.props
 # run Discovery when starting the docker image
 CMD ["java", "-cp", "/home/sd/sd2122.jar", \
 "tp1.server.UsersServer"]
+
