@@ -9,11 +9,13 @@ import tp1.api.service.rest.RestFiles;
 import tp1.clients.RestFileClient;
 import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
+import tp1.server.UsersServer;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DirectoryResource implements RestDirectory {
@@ -41,7 +43,7 @@ public class DirectoryResource implements RestDirectory {
         Random r = new Random();
         int result = r.nextInt(fileURI.length);
 
-        String fileUrl = String.format("%s%s%s/%s/%s", fileURI[result], "/rest", RestFiles.PATH, userId, filename);
+        String fileUrl = String.format("%s%s/%s/%s", fileURI[result], RestFiles.PATH, userId, filename);
 
         //Create newFileInfo
         FileInfo newFile = new FileInfo(userId, filename, fileUrl, new HashSet<String>());
@@ -54,6 +56,7 @@ public class DirectoryResource implements RestDirectory {
         RestFileClient files = new RestFileClient(fileURI[result]);
 
         String filedId = String.format("%s/%s", userId, filename);
+
         files.writeFile(filedId, data, "");
 
         return newFile;
@@ -80,7 +83,7 @@ public class DirectoryResource implements RestDirectory {
     public byte[] getFile(String filename, String userId, String accUserId, String password) {
 
         //user server
-        URI[] userURI = d.knownUrisOf("users");
+        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
         User user = users.getUser(accUserId, password);
 
@@ -89,28 +92,29 @@ public class DirectoryResource implements RestDirectory {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        FileInfo fI = getFileInfoUser(userId, password);
+        FileInfo fI = getFileInfoUser(userId, filename);
         if(fI == null){
             Log.info("File does not exist.");
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        if( userId != accUserId && !sharedFile(fI,accUserId)){
+        if( !userId.equals(accUserId) && !sharedFile(fI,accUserId)){
             Log.info("User does not have access to file.");
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
 
         //get File from file server
-        try {
-            RestFileClient files = new RestFileClient(new URI(fI.getFileURL()));
-            String filedId = String.format("%s/%s", userId, filename);
-            Log.info("URL: "+ fI.getFileURL()+" FILEID: "+filedId);
-            return files.getFile(filedId, "");
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
+        String filedId = String.format("%s/%s", userId, filename);
+        /*
+        String uri = fI.getFileURL().replace("/files/"+filedId, "");
+        System.out.println( "URI: "+uri+" filedId: "+filedId);*/
+        URI[] fileURI = d.knownUrisOf("files");
+        RestFileClient files = new RestFileClient(fileURI[0]);
+
+        return files.getFile(filedId, "");
+
+
     }
 
     @Override

@@ -101,8 +101,7 @@ public class Discovery {
                         ms.receive(pkt);
 
                         var msg = new String(pkt.getData(), 0, pkt.getLength());
-                        System.out.printf( "FROM %s (%s) : %s\n", pkt.getAddress().getCanonicalHostName(),
-                                pkt.getAddress().getHostAddress(), msg);
+                        //System.out.printf( "FROM %s (%s) : %s\n", pkt.getAddress().getCanonicalHostName(), pkt.getAddress().getHostAddress(), msg);
                         var tokens = msg.split(DELIMITER);
 
                         if (tokens.length == 2) {

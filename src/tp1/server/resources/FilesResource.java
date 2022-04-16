@@ -8,6 +8,7 @@ import tp1.server.Discovery;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class FilesResource implements RestFiles {
@@ -31,6 +32,7 @@ public class FilesResource implements RestFiles {
         }
 
         files.put(fileId, data);
+        printFiles();
     }
 
     @Override
@@ -70,5 +72,13 @@ public class FilesResource implements RestFiles {
         }
 
         return file;
+    }
+
+    private void printFiles(){
+        System.out.println("PRINTING FILESSS");
+        Set<String> fileIds = files.keySet();
+        for(String s: fileIds){
+            System.out.println(s);
+        }
     }
 }
