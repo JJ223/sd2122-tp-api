@@ -120,8 +120,9 @@ public class UsersResource implements RestUsers {
 		}
 
 		List<User> result = new ArrayList<User>();
-		users.values().stream().forEach( u -> { if( u.getFullName().
-				indexOf(pattern) != -1) result.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); });
+		users.values().stream().forEach( u -> { 
+			if( u.getFullName().toUpperCase().indexOf(pattern.toUpperCase()) != -1) result.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); 
+			});
 		return result;
 
 
