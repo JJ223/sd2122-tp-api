@@ -137,14 +137,18 @@ public class Discovery {
      * @return an array of URI with the service instances discovered.
      *
      */
-    public URI[] knownUrisOf(String serviceName) throws URISyntaxException {
+    public URI[] knownUrisOf(String serviceName) {
         ArrayList<String> a = services.get(serviceName);
         if(a == null) return null;
 
         URI[] u = new URI[a.size()];
         int i = 0;
         for (String s : a) {
-            u[i++] = new URI(s);
+            try {
+                u[i++] = new URI(s);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
         return u;
     }
