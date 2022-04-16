@@ -124,29 +124,6 @@ public class UsersResource implements RestUsers {
 			if( u.getFullName().toUpperCase().indexOf(pattern.toUpperCase()) != -1) result.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); 
 			});
 		return result;
-
-
-		/*
-		Log.info("searchUsers : pattern = " + pattern);
-
-		if(pattern == null){
-			Log.info("Pattern is null.");
-			throw new WebApplicationException( Status.BAD_REQUEST );
-		}
-
-		List<User> list = new ArrayList<User>();
-		Iterator<User> it = users.values().iterator();
-
-		while(it.hasNext()){
-			User user = it.next();
-			if(user.getFullName().contains(pattern)) {
-				User noPassUser = new User(user.getUserId(), user.getFullName(), user.getEmail(), "");
-				list.add(noPassUser);
-			}
-		}
-
-		return list;
-		*/
 	}
 
 }
