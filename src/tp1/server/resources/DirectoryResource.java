@@ -6,16 +6,14 @@ import tp1.api.FileInfo;
 import tp1.api.User;
 import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.rest.RestFiles;
+import tp1.clients.RestDirectoryClient;
 import tp1.clients.RestFileClient;
 import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
 import tp1.server.UsersServer;
 
-import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DirectoryResource implements RestDirectory {
@@ -36,8 +34,8 @@ public class DirectoryResource implements RestDirectory {
         //user server
         URI[] userURI = d.knownUrisOf("users");
         RestUsersClient users = new RestUsersClient(userURI[0]);
-        User user = users.getUser(userId, password);
-
+        User user = users.getUser(userId, password);  
+        
         //choose file server
         URI[] fileURI = d.knownUrisOf("files");
         Random r = new Random();
@@ -52,7 +50,7 @@ public class DirectoryResource implements RestDirectory {
 
         directory.get(userId).add(newFile);
 
-        //add file to file server
+        //add file to file server        
         RestFileClient files = new RestFileClient(fileURI[result]);
 
         String filedId = String.format("%s/%s", userId, filename);

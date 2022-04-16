@@ -5,12 +5,9 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
-import tp1.api.service.rest.RestUsers;
 
 import java.net.URI;
-import java.util.List;
 
 public class RestFileClient extends RestClient implements RestFiles {
 
@@ -49,19 +46,21 @@ public class RestFileClient extends RestClient implements RestFiles {
 
         Response r = target.path(fileId)
                 .request()
-                .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(data, MediaType.APPLICATION_OCTET_STREAM));
+                .accept(MediaType.APPLICATION_OCTET_STREAM)
+                .post(Entity.entity(data, MediaType.APPLICATION_JSON));
 
-        if( r.getStatus() != Response.Status.OK.getStatusCode() || !r.hasEntity() )
+        if( r.getStatus() != Response.Status.OK.getStatusCode() || !r.hasEntity() ) {
+        	System.out.println("Erro no WriteFile FileClient");
             System.out.println("Error, HTTP error status: " + r.getStatus() );
+        }
 
     }
 
     private void clt_deleteFile( String fileId, String token) {
 
         Response r = target.path(fileId)
-                .request()
-                .delete();
+                	.request()
+                	.delete();
 
         if( r.getStatus() != Response.Status.OK.getStatusCode() || !r.hasEntity() )
             System.out.println("Error, HTTP error status: " + r.getStatus() );
@@ -77,8 +76,10 @@ public class RestFileClient extends RestClient implements RestFiles {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return r.readEntity(new GenericType<byte[]>() {});
-        else
+        else {
+        	System.out.println("Erro no GetFile FileClient");
             System.out.println("Error, HTTP error status: " + r.getStatus() );
+        }
 
         return null;
     }
