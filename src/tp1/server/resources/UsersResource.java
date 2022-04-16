@@ -8,6 +8,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
+import tp1.server.Discovery;
 
 @Singleton
 public class UsersResource implements RestUsers {
@@ -16,7 +17,8 @@ public class UsersResource implements RestUsers {
 
 	private static Logger Log = Logger.getLogger(UsersResource.class.getName());
 	
-	public UsersResource() {
+	public UsersResource(Discovery d) {
+		d.listener();
 	}
 		
 	@Override
@@ -102,14 +104,14 @@ public class UsersResource implements RestUsers {
 	public User deleteUser(String userId, String password) {
 		Log.info("deleteUser : user = " + userId + "; pwd = " + password);
 		User user = getUser(userId, password);
-		users.remove(userId, user);
+		users.remove(userId);
 		return user;
 	}
 
 
 	@Override
 	public List<User> searchUsers(String pattern) {
-		/**
+
 		Log.info("searchUsers : pattern = " + pattern);
 
 		if(pattern == null){
@@ -121,8 +123,9 @@ public class UsersResource implements RestUsers {
 		users.values().stream().forEach( u -> { if( u.getFullName().
 				indexOf(pattern) != -1) result.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); });
 		return result;
-		 */
 
+
+		/*
 		Log.info("searchUsers : pattern = " + pattern);
 
 		if(pattern == null){
@@ -135,14 +138,14 @@ public class UsersResource implements RestUsers {
 
 		while(it.hasNext()){
 			User user = it.next();
-			if(user.getFullName().toUpperCase().contains(pattern.toUpperCase())) {
+			if(user.getFullName().contains(pattern)) {
 				User noPassUser = new User(user.getUserId(), user.getFullName(), user.getEmail(), "");
 				list.add(noPassUser);
 			}
 		}
 
 		return list;
-
+		*/
 	}
 
 }

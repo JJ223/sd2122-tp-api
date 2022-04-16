@@ -2,6 +2,7 @@ package tp1.server.resources;
 
 import tp1.api.FileInfo;
 import tp1.api.service.rest.RestDirectory;
+import tp1.server.Discovery;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,7 +11,8 @@ public class DirectoryResource implements RestDirectory {
 
     private static Logger Log = Logger.getLogger(DirectoryResource.class.getName());
 
-    public DirectoryResource() {
+    public DirectoryResource(Discovery d) {
+        d.listener();
     }
 
     @Override

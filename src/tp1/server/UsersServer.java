@@ -1,6 +1,7 @@
 package tp1.server;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,21 +23,25 @@ public class UsersServer {
 	}
 	
 	public static final int PORT = 8080;
-	public static final String SERVICE = "UsersService";
+	public static final String SERVICE = "users";
 	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
+	private static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("226.226.226.226", 2266);
 
 	public static void main(String[] args) {
 		try {
 			Debug.setLogLevel( Level.INFO, Debug.SD2122 );
-
-
 			ResourceConfig config = new ResourceConfig();
-			config.register(UsersResource.class);
-			//config.register(CustomLoggingFilter.class);
-			//config.register(GenericExceptionMapper.class);
 
 			String ip = InetAddress.getLocalHost().getHostAddress();
 			String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
+
+			Discovery d = new Discovery(DISCOVERY_ADDR, SERVICE, serverURI);
+			d.start();
+
+			config.register( new UsersResource(d) );
+			//config.register(CustomLoggingFilter.class);
+			//config.register(GenericExceptionMapper.class);
+
 			JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
 			Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));

@@ -4,6 +4,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
+import tp1.server.Discovery;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,8 @@ public class FilesResource implements RestFiles {
 
     private static Logger Log = Logger.getLogger(FilesResource.class.getName());
 
-    public FilesResource() {
+    public FilesResource( Discovery d) {
+        d.listener();
     }
 
     @Override
