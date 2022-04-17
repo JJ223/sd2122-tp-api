@@ -34,30 +34,43 @@ public class DirectoryResource implements RestDirectory {
         //user server
         URI[] userURI = d.knownUrisOf("users");
         RestUsersClient users = new RestUsersClient(userURI[0]);
-        User user = users.getUser(userId, password);  
-        
+        User user = users.getUser(userId, password);
+
+        String filedId = String.format("%s/%s", userId, filename);
+
+        URI fileServerURI = null;
+        FileInfo f;
+
+        if(!directory.containsKey(userId)){
+            directory.put(userId, new ArrayList<FileInfo>());
+        }else{
+            f = getFileInfoUser(userId, filename);
+            if(f != null) {
+                fileServerURI = URI.create(f.getFileURL().replace("/" + filedId, ""));
+                RestFileClient files = new RestFileClient(fileServerURI);
+                files.writeFile(filedId, data, "");
+
+                return f;
+            }
+        }
+
         //choose file server
         URI[] fileURI = d.knownUrisOf("files");
         Random r = new Random();
         int result = r.nextInt(fileURI.length);
+        fileServerURI = fileURI[result];
 
         String fileUrl = String.format("%s%s/%s/%s", fileURI[result], RestFiles.PATH, userId, filename);
 
         //Create newFileInfo
-        FileInfo newFile = new FileInfo(userId, filename, fileUrl, new HashSet<String>());
-        if(!directory.containsKey(userId))
-            directory.put(userId, new ArrayList<FileInfo>());
-
-        directory.get(userId).add(newFile);
+        f = new FileInfo(userId, filename, fileUrl, new HashSet<String>());
+        directory.get(userId).add(f);
 
         //add file to file server        
-        RestFileClient files = new RestFileClient(fileURI[result]);
-
-        String filedId = String.format("%s/%s", userId, filename);
-
+        RestFileClient files = new RestFileClient(fileServerURI);
         files.writeFile(filedId, data, "");
 
-        return newFile;
+        return f;
 
 
     }
@@ -101,15 +114,6 @@ public class DirectoryResource implements RestDirectory {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
 
-        //get File from file server
-
-        String filedId = String.format("%s/%s", userId, filename);
-        /*
-        String uri = fI.getFileURL().replace("/files/"+filedId, "");
-        System.out.println( "URI: "+uri+" filedId: "+filedId);*/
-        URI[] fileURI = d.knownUrisOf("files");
-        RestFileClient files = new RestFileClient(fileURI[0]);
-
         throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
 
 
@@ -135,4 +139,5 @@ public class DirectoryResource implements RestDirectory {
         Set<String> sharedWith = fI.getSharedWith();
         return sharedWith.contains(accUserId);
     }
+
 }
