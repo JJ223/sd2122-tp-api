@@ -3,10 +3,8 @@ package tp1.server.resources;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import tp1.api.FileInfo;
-import tp1.api.User;
 import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.rest.RestFiles;
-import tp1.clients.RestDirectoryClient;
 import tp1.clients.RestFileClient;
 import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
@@ -34,7 +32,7 @@ public class DirectoryResource implements RestDirectory {
         //user server
         URI[] userURI = d.knownUrisOf("users");
         RestUsersClient users = new RestUsersClient(userURI[0]);
-        User user = users.getUser(userId, password);  
+        users.getUser(userId, password);  
         
         //choose file server
         URI[] fileURI = d.knownUrisOf("files");
@@ -83,7 +81,7 @@ public class DirectoryResource implements RestDirectory {
         //user server
         URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
-        User user = users.getUser(accUserId, password);
+        users.getUser(accUserId, password);
 
         if(!directory.containsKey(userId)) {
             Log.info("User with userid does not have files.");
