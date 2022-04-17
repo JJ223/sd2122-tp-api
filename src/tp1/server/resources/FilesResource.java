@@ -32,7 +32,6 @@ public class FilesResource implements RestFiles {
         }
 
         files.put(fileId, data);
-        printFiles();
     }
 
     @Override
@@ -72,13 +71,5 @@ public class FilesResource implements RestFiles {
         }
 
         return file;
-    }
-
-    private void printFiles(){
-        System.out.println("PRINTING FILESSS");
-        Set<String> fileIds = files.keySet();
-        for(String s: fileIds){
-            System.out.println(s);
-        }
     }
 }

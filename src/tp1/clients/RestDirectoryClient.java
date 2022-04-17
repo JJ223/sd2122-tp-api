@@ -16,7 +16,7 @@ public class RestDirectoryClient extends RestClient implements RestDirectory {
 
     final WebTarget target;
 
-    RestDirectoryClient( URI serverURI ) {
+    public RestDirectoryClient( URI serverURI ) {
         super( serverURI );
         target = client.target( serverURI ).path( RestDirectory.PATH );
     }
@@ -67,7 +67,7 @@ public class RestDirectoryClient extends RestClient implements RestDirectory {
     }
     
     private FileInfo clt_writeFile( String filename, byte[] data, String userId, String password) {
-
+    	
         Response r = target.path(String.format("%s/%s", userId, filename))
         		.queryParam(RestUsers.PASSWORD, password)
                 .request()
