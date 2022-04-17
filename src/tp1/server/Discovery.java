@@ -110,7 +110,8 @@ public class Discovery {
                                 s = new ArrayList<String>();
                                 services.put(tokens[0], s);
                             }
-                            s.add(tokens[1]);
+                            if(!s.contains(tokens[1]))
+                                s.add(tokens[1]);
 
                         }
                     } catch (IOException e) {
