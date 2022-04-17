@@ -108,7 +108,7 @@ public class DirectoryResource implements RestDirectory {
         URI[] fileURI = d.knownUrisOf("files");
         RestFileClient files = new RestFileClient(fileURI[0]);
 
-        return files.getFile(filedId, "");
+        throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
 
 
     }
