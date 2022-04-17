@@ -2,18 +2,17 @@ package tp1.server.resources;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
 import tp1.server.Discovery;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 public class FilesResource implements RestFiles {
-
-    private Map<String, byte[]> files = new HashMap<>();
 
     private static Logger Log = Logger.getLogger(FilesResource.class.getName());
 
@@ -30,8 +29,17 @@ public class FilesResource implements RestFiles {
             Log.info("File invalid.");
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
+        
+        FileWriter file;
+		try {
+			file = new FileWriter(fileId);
+			file.write(data.toString());
+	        file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
 
-        files.put(fileId, data);
     }
 
     @Override
@@ -44,13 +52,14 @@ public class FilesResource implements RestFiles {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        byte[] file = files.get(fileId);
-        if(file == null){
+        File file = new File(fileId);
+        
+        if(file.exists()){
             Log.info("File does not exist.");
             throw new WebApplicationException( Response.Status.NOT_FOUND );
         }
-
-        files.remove(fileId);
+        
+        file.delete();
 
     }
 
@@ -64,12 +73,20 @@ public class FilesResource implements RestFiles {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        byte[] file = files.get(fileId);
-        if(file == null){
-            Log.info("File does not exist.");
-            throw new WebApplicationException( Response.Status.NOT_FOUND );
-        }
+        byte[] file;
+		try {
+			file = Files.readAllBytes(Paths.get(fileId));
+			
+			if(file == null){
+	            Log.info("File does not exist.");
+	            throw new WebApplicationException( Response.Status.NOT_FOUND );
+	        }
 
-        return file;
+	        return file;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        return null;
     }
 }
