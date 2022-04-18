@@ -3,7 +3,6 @@ package tp1.server;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import tp1.server.resources.DirectoryResource;
-import tp1.server.resources.FilesResource;
 import util.Debug;
 
 import java.net.InetAddress;

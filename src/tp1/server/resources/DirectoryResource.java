@@ -46,7 +46,7 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         FileInfo f;
 
         if(!directory.containsKey(userId)){
-            directory.put(userId, new ArrayList<FileInfo>());
+            directory.put(userId, new LinkedList<FileInfo>());
         }else{
             f = getFileInfoUser(userId, filename);
             if(f != null) {
@@ -81,7 +81,29 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
 
     @Override
     public void deleteFile(String filename, String userId, String password) {
+    	URI[] userURI = d.knownUrisOf("users");
+        RestUsersClient users = new RestUsersClient(userURI[0]);
 
+        Result<User> res = users.getUser(userId, password);
+        if(!res.isOK())
+        	getErrorException(res.error());
+        
+        String filedId = String.format("%s.%s", userId, filename);
+                
+        if(!directory.containsKey(userId)) {
+            Log.info("User with userid does not have files.");
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        } else {
+        	FileInfo fileInfo = getFileInfoUser( userId, filename);
+        	if(fileInfo!=null) {
+        		URI fileServerURI = URI.create(fileInfo.getFileURL().replace("/" + filedId, ""));
+        		RestFileClient files = new RestFileClient(fileServerURI);
+        		files.deleteFile(filedId, "");
+        	} else {
+        		Log.info("File does not exist.");
+        		throw new WebApplicationException(Response.Status.NOT_FOUND);
+        	}		
+        }
     }
 
     @Override
