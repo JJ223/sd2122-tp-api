@@ -52,7 +52,6 @@ public class JavaUsers implements Users{
         }
 
         //Check if the password is correct
-        System.out.println("Given pwd: "+userId+" Real pwd: "+user.getPassword());
         if( !user.getPassword().equals( password)) {
             Log.info("Password is incorrect.");
             return Result.error(Result.ErrorCode.FORBIDDEN );
