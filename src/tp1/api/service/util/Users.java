@@ -2,6 +2,10 @@ package tp1.api.service.util;
 
 import java.util.List;
 
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import tp1.api.User;
 
 public interface Users {

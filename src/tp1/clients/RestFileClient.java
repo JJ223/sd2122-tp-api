@@ -6,10 +6,12 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import tp1.api.service.rest.RestFiles;
+import tp1.api.service.util.Files;
+import tp1.api.service.util.Result;
 
 import java.net.URI;
 
-public class RestFileClient extends RestClient implements RestFiles {
+public class RestFileClient extends RestClient implements Files {
 
     final WebTarget target;
 
@@ -19,55 +21,59 @@ public class RestFileClient extends RestClient implements RestFiles {
     }
 
     @Override
-    public void writeFile(String fileId, byte[] data, String token) {
-        super.reTry( () -> {
-            clt_writeFile( fileId, data, token );
-            return null;
-        });
-
-    }
-
-    @Override
-    public void deleteFile(String fileId, String token) {
-        super.reTry( () -> {
-            clt_deleteFile( fileId, token );
-            return null;
+    public Result<Void> writeFile(String fileId, byte[] data, String token) {
+        return super.reTry( () -> {
+            return clt_writeFile( fileId, data, token );
         });
     }
 
     @Override
-    public byte[] getFile(String fileId, String token) {
+    public Result<Void> deleteFile(String fileId, String token) {
+        return super.reTry( () -> {
+            return clt_deleteFile( fileId, token );
+        });
+    }
+
+    @Override
+    public Result<byte[]> getFile(String fileId, String token) {
         return super.reTry( () -> {
             return clt_getFile( fileId, token );
         });
     }
 
-    private void clt_writeFile( String fileId, byte[] data, String token) {
+    private Result<Void> clt_writeFile( String fileId, byte[] data, String token) {
 
         Response r = target.path(fileId)
         		.queryParam("token", token)
                 .request()
                 .post(Entity.entity(data, MediaType.APPLICATION_OCTET_STREAM));
 
-        if( r.getStatus() != Response.Status.NO_CONTENT.getStatusCode() ) {
+        if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
+            return r.readEntity(Result.class);
+        else
             System.out.println("Error, HTTP error status: " + r.getStatus() );
-        }
+
+        return null;
 
     }
 
-    private void clt_deleteFile( String fileId, String token) {
+    private Result<Void> clt_deleteFile( String fileId, String token) {
 
         Response r = target.path(fileId)
         			.queryParam("token", token)
                 	.request()
                 	.delete();
 
-        if( r.getStatus() != Response.Status.OK.getStatusCode() || !r.hasEntity() )
+        if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
+            return r.readEntity(Result.class);
+        else
             System.out.println("Error, HTTP error status: " + r.getStatus() );
+
+        return null;
 
     }
 
-    private byte[] clt_getFile( String fileId, String token) {
+    private Result<byte[]> clt_getFile( String fileId, String token) {
 
         Response r = target.path(fileId)
         		.queryParam("token", token)
@@ -76,11 +82,9 @@ public class RestFileClient extends RestClient implements RestFiles {
                 .get();
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
-            return r.readEntity(new GenericType<byte[]>() {});
-        else {
-        	System.out.println("Erro no GetFile FileClient");
+            return r.readEntity(Result.class);
+        else
             System.out.println("Error, HTTP error status: " + r.getStatus() );
-        }
 
         return null;
     }

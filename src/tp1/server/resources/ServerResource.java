@@ -20,7 +20,6 @@ public class ServerResource {
 		case NOT_IMPLEMENTED:
 			throw new WebApplicationException(Status.NOT_IMPLEMENTED);
 		default:
-			break;
 		}
 	}
 }
