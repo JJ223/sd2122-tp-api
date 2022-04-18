@@ -6,6 +6,7 @@ import tp1.api.FileInfo;
 import tp1.api.User;
 import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.rest.RestFiles;
+import tp1.api.service.util.Result;
 import tp1.clients.RestDirectoryClient;
 import tp1.clients.RestFileClient;
 import tp1.clients.RestUsersClient;
@@ -35,7 +36,12 @@ public class DirectoryResource implements RestDirectory {
         URI[] userURI = d.knownUrisOf("users");
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
-        User user = users.getUser(userId, password);
+        Result res = users.getUser(userId, password);
+
+        if(!res.isOK()){
+            res.error()
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
 
         String filedId = String.format("%s.%s", userId, filename);
 
