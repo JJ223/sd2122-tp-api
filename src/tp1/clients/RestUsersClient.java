@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -109,12 +110,10 @@ public class RestUsersClient extends RestClient implements Users {
 				.accept(MediaType.APPLICATION_JSON)
 				.get();
 
-		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
-			return r.readEntity(Result.class);
-		else
-			System.out.println("Error, HTTP error status: " + r.getStatus() );
-
-		return null;
+		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity()) {
+			return Result.ok(r.readEntity(User.class));
+		}
+		return Result.error(Status.fromStatusCode(r.getStatus()))
 	}
 
 	private Result<User> clt_updateUser( String userId, String password, User user ) {

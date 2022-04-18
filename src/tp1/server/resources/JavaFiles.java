@@ -19,6 +19,7 @@ public class JavaFiles implements Files {
     @Override
     public Result<Void> writeFile(String fileId, byte[] data, String token) {
         Log.info("writeFile : " + fileId);
+        System.out.println("JAVA FILES");
 
         // Check if file data is valid
         if(fileId == null || data == null) {

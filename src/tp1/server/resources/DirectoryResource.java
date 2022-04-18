@@ -39,7 +39,8 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         System.out.println("BEFORE GET USER");
         Result<User> res = users.getUser(userId, password);
         System.out.println("AFTER GET USER");
-
+        System.out.println("RES"+res);
+        System.out.println("RES is OK"+res.isOK());
         if(!res.isOK())
         	getErrorException(res.error());
 

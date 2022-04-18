@@ -22,8 +22,6 @@ public class JavaUsers implements Users{
     public Result<String> createUser(User user) {
         Log.info("createUser : " + user);
 
-        System.out.println("INSIDE USERRESOURCE CREATE USRE");
-
         // Check if user data is valid
         if(user.getUserId() == null || user.getPassword() == null || user.getFullName() == null ||
                 user.getEmail() == null) {

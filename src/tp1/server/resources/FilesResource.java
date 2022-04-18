@@ -29,6 +29,7 @@ public class FilesResource extends ServerResource implements RestFiles {
 
     @Override
     public void writeFile(String fileId, byte[] data, String token) {
+        System.out.println("INSIDE FILERESOURCE");
         var result = impl.writeFile( fileId, data, token );
         if( !result.isOK() )
             getErrorException(result.error()) ;
