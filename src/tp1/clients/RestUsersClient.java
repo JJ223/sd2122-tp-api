@@ -64,7 +64,7 @@ public class RestUsersClient extends RestClient implements Users {
 				.post(Entity.entity(user, MediaType.APPLICATION_JSON));
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
-			return r.readEntity(Result.class);
+			return Result.ok(r.readEntity(new GenericType<>(){}));
 		else
 			System.out.println("Error, HTTP error status: " + r.getStatus() );
 		
@@ -80,7 +80,7 @@ public class RestUsersClient extends RestClient implements Users {
 				.delete();
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
-			return r.readEntity(Result.class);
+			return Result.ok(r.readEntity(User.class));
 		else
 			System.out.println("Error, HTTP error status: " + r.getStatus() );
 
@@ -95,7 +95,7 @@ public class RestUsersClient extends RestClient implements Users {
 				.get();
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
-			return r.readEntity(Result.class);
+			return Result.ok(r.readEntity(List.class));
 		else 
 			System.out.println("Error, HTTP error status: " + r.getStatus() );
 		
@@ -113,7 +113,7 @@ public class RestUsersClient extends RestClient implements Users {
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity()) {
 			return Result.ok(r.readEntity(User.class));
 		}
-		return Result.error(Status.fromStatusCode(r.getStatus()))
+		return Result.error(Status.fromStatusCode(r.getStatus()));
 	}
 
 	private Result<User> clt_updateUser( String userId, String password, User user ) {
@@ -125,7 +125,7 @@ public class RestUsersClient extends RestClient implements Users {
 				.put(Entity.entity(user, MediaType.APPLICATION_JSON));
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
-			return r.readEntity(Result.class);
+			return Result.ok(r.readEntity(User.class));
 		else
 			System.out.println("Error, HTTP error status: " + r.getStatus() );
 

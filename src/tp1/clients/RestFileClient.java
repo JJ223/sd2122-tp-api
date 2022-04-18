@@ -5,6 +5,7 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Files;
 import tp1.api.service.util.Result;
@@ -49,7 +50,7 @@ public class RestFileClient extends RestClient implements Files {
                 .post(Entity.entity(data, MediaType.APPLICATION_OCTET_STREAM));
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
-            return r.readEntity(Result.class);
+            return Result.ok();
         else
             System.out.println("Error, HTTP error status: " + r.getStatus() );
 
@@ -65,7 +66,7 @@ public class RestFileClient extends RestClient implements Files {
                 	.delete();
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
-            return r.readEntity(Result.class);
+            return Result.ok();
         else
             System.out.println("Error, HTTP error status: " + r.getStatus() );
 
@@ -82,7 +83,7 @@ public class RestFileClient extends RestClient implements Files {
                 .get();
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
-            return r.readEntity(Result.class);
+            return Result.ok(r.readEntity(new GenericType<>(){}));
         else
             System.out.println("Error, HTTP error status: " + r.getStatus() );
 
