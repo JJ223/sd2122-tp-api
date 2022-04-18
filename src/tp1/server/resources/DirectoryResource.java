@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class DirectoryResource implements RestDirectory {
+public class DirectoryResource extends ServerResource implements RestDirectory {
 
     private static Logger Log = Logger.getLogger(DirectoryResource.class.getName());
     private Discovery d;
@@ -36,12 +36,10 @@ public class DirectoryResource implements RestDirectory {
         URI[] userURI = d.knownUrisOf("users");
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
-        Result res = users.getUser(userId, password);
+        Result<User> res = users.getUser(userId, password);
 
-        if(!res.isOK()){
-            res.error()
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
+        if(!res.isOK())
+        	getErrorException(res.error());
 
         String filedId = String.format("%s.%s", userId, filename);
 
@@ -103,8 +101,12 @@ public class DirectoryResource implements RestDirectory {
         //user server
         URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
-        User user = users.getUser(accUserId, password);
+        
+        Result<User> res = users.getUser(userId, password);
 
+        if(!res.isOK())
+        	getErrorException(res.error());
+        
         if(!directory.containsKey(userId)) {
             Log.info("User with userid does not have files.");
             throw new WebApplicationException(Response.Status.NOT_FOUND);
