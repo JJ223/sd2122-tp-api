@@ -49,7 +49,8 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         }else{
             f = getFileInfoUser(userId, filename);
             if(f != null) {
-                fileServerURI = URI.create(f.getFileURL().replace("/" + filedId, ""));
+                fileServerURI = URI.create(f.getFileURL().replace("/files/" + filedId, ""));
+                System.out.println(fileServerURI);
                 RestFileClient files = new RestFileClient(fileServerURI);
                 files.writeFile(filedId, data, "");
 
@@ -95,9 +96,11 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         } else {
         	FileInfo fileInfo = getFileInfoUser( userId, filename);
         	if(fileInfo!=null) {
-        		URI fileServerURI = URI.create(fileInfo.getFileURL().replace("/" + filedId, ""));
+        		URI fileServerURI = URI.create(fileInfo.getFileURL().replace("/files/" + filedId, ""));
         		RestFileClient files = new RestFileClient(fileServerURI);
         		files.deleteFile(filedId, "");
+                List<FileInfo> l = directory.get(userId);
+                l.remove(fileInfo);
         	} else {
         		Log.info("File does not exist.");
         		throw new WebApplicationException(Response.Status.NOT_FOUND);
