@@ -71,4 +71,14 @@ public class UsersResource extends ServerResource implements RestUsers {
 			getErrorException(result.error()) ;
 		return null;
 	}
+
+	@Override
+	public boolean userExists(String userId) {
+		var result = impl.userExists( userId );
+		if( result.isOK() )
+			return result.value();
+		else
+			getErrorException(result.error()) ;
+		return false;
+	}
 }

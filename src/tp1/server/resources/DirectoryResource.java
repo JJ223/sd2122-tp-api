@@ -7,7 +7,6 @@ import tp1.api.User;
 import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Result;
-import tp1.clients.RestDirectoryClient;
 import tp1.clients.RestFileClient;
 import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
@@ -108,17 +107,60 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
 
     @Override
     public void shareFile(String filename, String userId, String userIdShare, String password) {
+        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        RestUsersClient users = new RestUsersClient(userURI[0]);
+
+        Result<User> res = users.getUser(userId, password);
+        if(!res.isOK())
+            getErrorException(res.error());
+
+        Result<Boolean> res2 = users.userExists(userIdShare);
+        if(!res2.isOK())
+            getErrorException(res2.error());
+
+        FileInfo fI = getFileInfoUser(userId, filename);
+        if(fI == null) {
+            Log.info("File does not exist.");
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        if(!sharedFile(fI,userIdShare)) {
+            Set<String> shared = fI.getSharedWith();
+            shared.add(userIdShare);
+        }
 
     }
 
     @Override
     public void unshareFile(String filename, String userId, String userIdShare, String password) {
 
+        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        RestUsersClient users = new RestUsersClient(userURI[0]);
+
+        Result<User> res = users.getUser(userId, password);
+        if(!res.isOK())
+            getErrorException(res.error());
+
+        Result<Boolean> res2 = users.userExists(userIdShare);
+        if(!res2.isOK())
+            getErrorException(res2.error());
+
+        FileInfo fI = getFileInfoUser(userId, filename);
+        if(fI == null) {
+            Log.info("File does not exist.");
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        if(sharedFile(fI,userIdShare)) {
+            Set<String> shared = fI.getSharedWith();
+            shared.remove(userIdShare);
+        }
     }
 
     @Override
     public byte[] getFile(String filename, String userId, String accUserId, String password) {
 
+        //TODO verificar se o accUserId exists
         //user server
         URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);

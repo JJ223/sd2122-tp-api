@@ -102,6 +102,7 @@ public class JavaUsers implements Users{
 
     public Result<User> deleteUser(String userId, String password) {
         Log.info("deleteUser : user = " + userId + "; pwd = " + password);
+        //TODO DElete user files from system\
 
         Result<User> result = getUser(userId, password);
 
@@ -130,6 +131,12 @@ public class JavaUsers implements Users{
 
 
         return Result.ok(list);
+    }
+
+    public Result<Boolean> userExists(String userId) {
+        if(users.containsKey(userId))
+            return Result.ok(true);
+        return Result.error(Result.ErrorCode.NOT_FOUND);
     }
 
 }
