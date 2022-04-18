@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import tp1.api.FileInfo;
 import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Result;
@@ -64,7 +65,7 @@ public class RestUsersClient extends RestClient implements Users {
 				.post(Entity.entity(user, MediaType.APPLICATION_JSON));
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
-			return Result.ok(r.readEntity(new GenericType<>(){}));
+			return Result.ok(r.readEntity(new GenericType<String>(){}));
 		return getResultError(r);
 	}
 
@@ -89,7 +90,7 @@ public class RestUsersClient extends RestClient implements Users {
 				.get();
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
-			return Result.ok(r.readEntity(List.class));
+			return Result.ok(r.readEntity(new GenericType<List<User>>() {}));
 		return getResultError(r);
 	}
 

@@ -77,7 +77,7 @@ public class RestFileClient extends RestClient implements Files {
                 .get();
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
-            return Result.ok(r.readEntity(new GenericType<>(){}));
+            return Result.ok(r.readEntity(new GenericType<byte[]>(){}));
         return getResultError(r);
     }
 
