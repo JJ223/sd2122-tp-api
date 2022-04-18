@@ -57,6 +57,13 @@ public class RestUsersClient extends RestClient implements Users {
 		return super.reTry( () -> clt_searchUsers( pattern ));
 	}
 
+	@Override
+	public Result<Boolean> userExists(String userId) {
+		return super.reTry( () -> {
+			return clt_userExists( userId );
+		});
+	}
+
 
 	private Result<String> clt_createUser( User user) {
 		
@@ -117,6 +124,17 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
+		return getResultError(r);
+	}
+
+	private Result<Boolean> clt_userExists( String userId ){
+		Response r = target.path(userId)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+
+		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
+			return Result.ok(r.readEntity(new GenericType<Boolean>(){}));
 		return getResultError(r);
 	}
 
