@@ -65,10 +65,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
 			return Result.ok(r.readEntity(new GenericType<>(){}));
-		else
-			System.out.println("Error, HTTP error status: " + r.getStatus() );
-		
-		return null;
+		return getResultError(r);
 	}
 
 	private Result<User> clt_deleteUser( String userId, String password ) {
@@ -81,10 +78,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
-		else
-			System.out.println("Error, HTTP error status: " + r.getStatus() );
-
-		return null;
+		return getResultError(r);
 	}
 	
 	private Result<List<User>> clt_searchUsers(String pattern) {
@@ -96,10 +90,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
 			return Result.ok(r.readEntity(List.class));
-		else 
-			System.out.println("Error, HTTP error status: " + r.getStatus() );
-		
-		return null;
+		return getResultError(r);
 	}
 
 	private Result<User> clt_getUser( String userId, String password ) {
@@ -110,10 +101,9 @@ public class RestUsersClient extends RestClient implements Users {
 				.accept(MediaType.APPLICATION_JSON)
 				.get();
 
-		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity()) {
+		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
-		}
-		return Result.error(Status.fromStatusCode(r.getStatus()));
+		return getResultError(r);
 	}
 
 	private Result<User> clt_updateUser( String userId, String password, User user ) {
@@ -126,10 +116,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
-		else
-			System.out.println("Error, HTTP error status: " + r.getStatus() );
-
-		return null;
+		return getResultError(r);
 	}
 
 }

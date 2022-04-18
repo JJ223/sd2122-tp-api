@@ -51,10 +51,7 @@ public class RestFileClient extends RestClient implements Files {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return Result.ok();
-        else
-            System.out.println("Error, HTTP error status: " + r.getStatus() );
-
-        return null;
+        return getResultError(r);
 
     }
 
@@ -67,10 +64,7 @@ public class RestFileClient extends RestClient implements Files {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return Result.ok();
-        else
-            System.out.println("Error, HTTP error status: " + r.getStatus() );
-
-        return null;
+        return getResultError(r);
 
     }
 
@@ -84,10 +78,7 @@ public class RestFileClient extends RestClient implements Files {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return Result.ok(r.readEntity(new GenericType<>(){}));
-        else
-            System.out.println("Error, HTTP error status: " + r.getStatus() );
-
-        return null;
+        return getResultError(r);
     }
 
 }

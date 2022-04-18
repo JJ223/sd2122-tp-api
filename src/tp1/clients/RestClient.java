@@ -4,12 +4,14 @@ import java.net.URI;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import tp1.api.service.util.Result;
 
 public class RestClient {
 	private static Logger Log = Logger.getLogger(RestClient.class.getName());
@@ -53,6 +55,17 @@ public class RestClient {
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException x) { // nothing to do...
+		}
+	}
+
+	protected <T> Result<T> getResultError(Response r) {
+		try {
+
+			Result.ErrorCode code = Result.ErrorCode.valueOf(Response.Status.fromStatusCode(r.getStatus()).toString());
+			return Result.error(code);
+
+		} catch(IllegalArgumentException e) {
+			return Result.error(Result.ErrorCode.NOT_IMPLEMENTED);
 		}
 	}
 }
