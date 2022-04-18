@@ -1,6 +1,7 @@
 package tp1.clients;
 
 import java.net.URI;
+import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -60,8 +61,7 @@ public class RestClient {
 
 	protected <T> Result<T> getResultError(Response r) {
 		try {
-
-			Result.ErrorCode code = Result.ErrorCode.valueOf(Response.Status.fromStatusCode(r.getStatus()).toString());
+			Result.ErrorCode code = Result.ErrorCode.valueOf(Response.Status.fromStatusCode(r.getStatus()).name());
 			return Result.error(code);
 
 		} catch(IllegalArgumentException e) {

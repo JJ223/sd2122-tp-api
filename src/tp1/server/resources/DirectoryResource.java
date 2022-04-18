@@ -102,7 +102,6 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         RestUsersClient users = new RestUsersClient(userURI[0]);
         
         Result<User> res = users.getUser(userId, password);
-
         if(!res.isOK())
         	getErrorException(res.error());
         
