@@ -34,9 +34,10 @@ public class DirectoryResource implements RestDirectory {
         //user server
         URI[] userURI = d.knownUrisOf("users");
         RestUsersClient users = new RestUsersClient(userURI[0]);
+
         User user = users.getUser(userId, password);
 
-        String filedId = String.format("%s/%s", userId, filename);
+        String filedId = String.format("%s.%s", userId, filename);
 
         URI fileServerURI = null;
         FileInfo f;
@@ -60,7 +61,7 @@ public class DirectoryResource implements RestDirectory {
         int result = r.nextInt(fileURI.length);
         fileServerURI = fileURI[result];
 
-        String fileUrl = String.format("%s%s/%s/%s", fileURI[result], RestFiles.PATH, userId, filename);
+        String fileUrl = String.format("%s%s/%s.%s", fileURI[result], RestFiles.PATH, userId, filename);
 
         //Create newFileInfo
         f = new FileInfo(userId, filename, fileUrl, new HashSet<String>());
@@ -109,7 +110,7 @@ public class DirectoryResource implements RestDirectory {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        if( !userId.equals(accUserId) && !sharedFile(fI,accUserId)){
+        if( (!userId.equals(accUserId) && !sharedFile(fI,accUserId) )){
             Log.info("User does not have access to file.");
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }

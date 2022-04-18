@@ -49,7 +49,7 @@ public class UsersResource implements RestUsers {
 		Log.info("getUser : user = " + userId + "; pwd = " + password);
 		
 		User user = users.get(userId);
-		
+		System.out.println("Password GIven: "+password+"Real Password: "+user.getPassword());
 		// Check if user exists 
 		if( user == null ) {
 			Log.info("User does not exist.");

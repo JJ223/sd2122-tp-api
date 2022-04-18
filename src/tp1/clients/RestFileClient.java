@@ -47,11 +47,9 @@ public class RestFileClient extends RestClient implements RestFiles {
         Response r = target.path(fileId)
         		.queryParam("token", token)
                 .request()
-                .accept(MediaType.APPLICATION_OCTET_STREAM)
-                .post(Entity.entity(data, MediaType.APPLICATION_JSON));
+                .post(Entity.entity(data, MediaType.APPLICATION_OCTET_STREAM));
 
-        if( r.getStatus() != Response.Status.OK.getStatusCode() || !r.hasEntity() ) {
-        	System.out.println("Erro no WriteFile FileClient");
+        if( r.getStatus() != Response.Status.NO_CONTENT.getStatusCode() ) {
             System.out.println("Error, HTTP error status: " + r.getStatus() );
         }
 

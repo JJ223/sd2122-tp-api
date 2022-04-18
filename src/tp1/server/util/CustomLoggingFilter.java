@@ -24,7 +24,7 @@ public class CustomLoggingFilter implements ContainerRequestFilter, ContainerRes
 		StringBuilder sb = new StringBuilder();
 		sb.append(" - Path: ").append(requestContext.getUriInfo().getPath());
 		sb.append(" - Header: ").append(requestContext.getHeaders());
-		sb.append(" - Entity: ").append(getEntityBody(requestContext));
+		//sb.append(" - Entity: ").append(getEntityBody(requestContext));
 		Log.info("HTTP REQUEST : " + sb.toString());
 	}
 
@@ -55,6 +55,7 @@ public class CustomLoggingFilter implements ContainerRequestFilter, ContainerRes
 			throws IOException {
 
 		StringBuilder sb = new StringBuilder();
+		sb.append("Status: ").append(responseContext.getStatus());
 		sb.append("Header: ").append(responseContext.getHeaders());
 		sb.append(" - Entity (JSON): ").append( Entity.entity(responseContext.getEntity(), MediaType.APPLICATION_JSON).getEntity());
 		Log.info("HTTP RESPONSE : " + sb.toString());

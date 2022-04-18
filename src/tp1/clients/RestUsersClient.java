@@ -11,8 +11,10 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
+import tp1.api.service.util.Result;
+import tp1.api.service.util.Users;
 
-public class RestUsersClient extends RestClient implements RestUsers {
+public class RestUsersClient extends RestClient implements Users {
 
 	final WebTarget target;
 	
@@ -22,35 +24,35 @@ public class RestUsersClient extends RestClient implements RestUsers {
 	}
 	
 	@Override
-	public String createUser(User user) {
+	public Result<String> createUser(User user) {
 		return super.reTry( () -> {
 			return clt_createUser( user );
 		});
 	}
 
 	@Override
-	public User getUser(String userId, String password) {
+	public Result<User> getUser(String userId, String password) {
 		return super.reTry( () -> {
 			return clt_getUser( userId, password );
 		});
 	}
 
 	@Override
-	public User updateUser(String userId, String password, User user) {
+	public Result<User> updateUser(String userId, String password, User user) {
 		return super.reTry( () -> {
 			return clt_updateUser( userId, password, user );
 		});
 	}
 
 	@Override
-	public User deleteUser(String userId, String password) {
+	public Result<User> deleteUser(String userId, String password) {
 		return super.reTry( () -> {
 			return clt_deleteUser( userId, password );
 		});
 	}
 
 	@Override
-	public List<User> searchUsers(String pattern) {
+	public Result<List<User>> searchUsers(String pattern) {
 		return super.reTry( () -> clt_searchUsers( pattern ));
 	}
 
@@ -63,8 +65,10 @@ public class RestUsersClient extends RestClient implements RestUsers {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
 			return r.readEntity(String.class);
-		else 
-			System.out.println("Error, HTTP error status: " + r.getStatus() );
+		else {
+			return Result.error(Result.ErrorCode.);
+			System.out.println("Error, HTTP error status: " + r.getStatus());
+		}
 		
 		return null;
 	}

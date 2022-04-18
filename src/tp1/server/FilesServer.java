@@ -10,6 +10,7 @@ import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import tp1.server.resources.FilesResource;
+import tp1.server.util.CustomLoggingFilter;
 import util.Debug;
 
 public class FilesServer {
@@ -37,7 +38,7 @@ public class FilesServer {
             d.start();
 
             config.register( new FilesResource(d) );
-            //config.register(CustomLoggingFilter.class);
+            config.register(CustomLoggingFilter.class);
             //config.register(GenericExceptionMapper.class);
 
             JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);

@@ -5,11 +5,16 @@ import jakarta.ws.rs.core.Response;
 import tp1.api.service.rest.RestFiles;
 import tp1.server.Discovery;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class FilesResource implements RestFiles {
@@ -32,9 +37,11 @@ public class FilesResource implements RestFiles {
         
         FileWriter file;
 		try {
-			file = new FileWriter(fileId);
-			file.write(data.toString());
-	        file.close();
+            File outputFile = new File(fileId);
+            try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                outputStream.write(data);
+            }
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
