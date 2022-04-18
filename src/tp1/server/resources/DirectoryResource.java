@@ -112,6 +112,27 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     @Override
     public void unshareFile(String filename, String userId, String userIdShare, String password) {
 
+        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        RestUsersClient users = new RestUsersClient(userURI[0]);
+
+        Result<User> res = users.getUser(userId, password);
+        if(!res.isOK())
+            getErrorException(res.error());
+
+        Result<Boolean> res2 = users.userExists(userIdShare);
+        if(!res2.isOK())
+            getErrorException(res2.error());
+
+        FileInfo fI = getFileInfoUser(userId, filename);
+        if(fI == null) {
+            Log.info("File does not exist.");
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        if(sharedFile(fI,userIdShare)) {
+            Set<String> shared = fI.getSharedWith();
+            shared.remove(userIdShare);
+        }
     }
 
     @Override
