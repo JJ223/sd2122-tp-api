@@ -4,14 +4,13 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response.Status;
 import tp1.api.User;
-import tp1.api.service.rest.RestUsers;
+import tp1.api.service.util.Result;
+import tp1.api.service.util.Users;
 import tp1.server.Discovery;
 
 @Singleton
-public class UsersResource implements RestUsers {
+public class UsersResource implements Users {
 
 	private final Map<String,User> users = new HashMap<>();
 
@@ -22,67 +21,71 @@ public class UsersResource implements RestUsers {
 	}
 		
 	@Override
-	public String createUser(User user) {
+	public Result<String> createUser(User user) {
 		Log.info("createUser : " + user);
 		
 		// Check if user data is valid
 		if(user.getUserId() == null || user.getPassword() == null || user.getFullName() == null || 
 				user.getEmail() == null) {
 			Log.info("User object invalid.");
-			throw new WebApplicationException( Status.BAD_REQUEST );
+			Result.error(Result.ErrorCode.BAD_REQUEST );
 		}
 		
 		// Check if userId already exists
 		if( users.containsKey(user.getUserId())) {
 			Log.info("User already exists.");
-			throw new WebApplicationException( Status.CONFLICT );
+			Result.error(Result.ErrorCode.CONFLICT );
 		}
 
 		//Add the user to the map of users
 		users.put(user.getUserId(), user);
-		return user.getUserId();
+		return Result.ok(user.getUserId());
 	}
 
 
 	@Override
-	public User getUser(String userId, String password) {
+	public Result<User> getUser(String userId, String password) {
 		Log.info("getUser : user = " + userId + "; pwd = " + password);
 		
 		User user = users.get(userId);
-		System.out.println("Password GIven: "+password+"Real Password: "+user.getPassword());
 		// Check if user exists 
 		if( user == null ) {
 			Log.info("User does not exist.");
-			throw new WebApplicationException( Status.NOT_FOUND );
+			return Result.error(Result.ErrorCode.NOT_FOUND);
 		}
 		
 		//Check if the password is correct
 		if( !user.getPassword().equals( password)) {
 			Log.info("Password is incorrect.");
-			throw new WebApplicationException( Status.FORBIDDEN );
+			Result.error(Result.ErrorCode.FORBIDDEN );
 		}
 
 		// Check if user is valid
 		if(userId == null || password == null) {
 			Log.info("UserId or passwrod null.");
-			throw new WebApplicationException( Status.BAD_REQUEST );
+			Result.error(Result.ErrorCode.BAD_REQUEST );
 		}
 		
-		return user;
+		return Result.ok(user);
 	}
 
 
 	@Override
-	public User updateUser(String userId, String password, User user) {
+	public Result<User> updateUser(String userId, String password, User user) {
 		Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; user = " + user);
 
 		if(user == null){
 			Log.info("User is null.");
-			throw new WebApplicationException( Status.BAD_REQUEST );
+			return Result.error(Result.ErrorCode.BAD_REQUEST);
 		}
 
-		User user2 = getUser(userId, password);
+		Result<User> result = getUser(userId, password);
 
+		if(!result.isOK())
+			return result;
+		
+		User user2 = result.value();
+		
 		String email = user.getEmail();
 		if(email != null)
 			user2.setEmail(email);
@@ -95,35 +98,43 @@ public class UsersResource implements RestUsers {
 		if(fullName != null)
 			user2.setFullName(fullName);
 
-		return user2;
+		return result;
 
 	}
 
 
 	@Override
-	public User deleteUser(String userId, String password) {
+	public Result<User> deleteUser(String userId, String password) {
 		Log.info("deleteUser : user = " + userId + "; pwd = " + password);
-		User user = getUser(userId, password);
+		
+		Result<User> result = getUser(userId, password);
+		
+		if(!result.isOK())
+			return result;
+		
 		users.remove(userId);
-		return user;
+		return result;
 	}
 
 
 	@Override
-	public List<User> searchUsers(String pattern) {
+	public Result<List<User>> searchUsers(String pattern) {
 
 		Log.info("searchUsers : pattern = " + pattern);
 
 		if(pattern == null){
 			Log.info("Pattern is null.");
-			throw new WebApplicationException( Status.BAD_REQUEST );
+			Result.error(Result.ErrorCode.BAD_REQUEST );
 		}
 
-		List<User> result = new ArrayList<User>();
+		List<User> list = new ArrayList<User>();
 		users.values().stream().forEach( u -> { 
-			if( u.getFullName().toUpperCase().indexOf(pattern.toUpperCase()) != -1) result.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); 
+			if( u.getFullName().toUpperCase().indexOf(pattern.toUpperCase()) != -1) list.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),"")); 
 			});
-		return result;
+		
+		
+		
+		return Result.ok(list);
 	}
 
 }

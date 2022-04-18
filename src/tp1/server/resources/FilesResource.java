@@ -35,7 +35,6 @@ public class FilesResource implements RestFiles {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         
-        FileWriter file;
 		try {
             File outputFile = new File(fileId);
             try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
