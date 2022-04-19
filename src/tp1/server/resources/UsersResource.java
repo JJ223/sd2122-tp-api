@@ -1,14 +1,18 @@
 package tp1.server.resources;
 
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.WebApplicationException;
 import tp1.api.User;
+import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
+import tp1.clients.RestDirectoryClient;
+import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
 
 @Singleton
@@ -16,9 +20,12 @@ public class UsersResource extends ServerResource implements RestUsers {
 
 	final Users impl = new JavaUsers();
 
+	private Discovery d;
+
 	private static Logger Log = Logger.getLogger(UsersResource.class.getName());
 
 	public UsersResource(Discovery d) {
+		this.d = d;
 		d.listener();
 	}
 
@@ -55,9 +62,12 @@ public class UsersResource extends ServerResource implements RestUsers {
 	@Override
 	public User deleteUser(String userId, String password) {
 		var result = impl.deleteUser( userId, password);
-		if( result.isOK() )
+		if( result.isOK() ) {
+			URI[] directoryURI = d.knownUrisOf("directory");
+			RestDirectoryClient directory = new RestDirectoryClient(directoryURI[0]);
+			directory.deleteUser(userId,password);
 			return result.value();
-		else
+		}else
 			getErrorException(result.error()) ;
 		return null;
 	}

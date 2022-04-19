@@ -65,7 +65,26 @@ public class RestDirectoryClient extends RestClient implements RestDirectory {
             return clt_listFiles( userId, password);
         });
     }
-    
+
+    @Override
+    public void deleteUser(String userId, String password) {
+        super.reTry( () -> {
+             clt_deleteUser( userId, password);
+             return null;
+        });
+
+    }
+
+    private void clt_deleteUser(String userId, String password){
+        Response r = target.path(userId)
+                .queryParam(RestUsers.PASSWORD, password)
+                .request()
+                .delete();
+
+        if( r.getStatus() != Response.Status.NO_CONTENT.getStatusCode() )
+            System.out.println("Error, HTTP error status: " + r.getStatus() );
+    }
+
     private FileInfo clt_writeFile( String filename, byte[] data, String userId, String password) {
     	
         Response r = target.path(String.format("%s.%s", userId, filename))

@@ -146,5 +146,15 @@ public interface RestDirectory {
 			@QueryParam("password") String password);
 
 
+	/**
+	 * Deletes User files from directory and removes the user from the sharedwith of the files shared with him
+	 *
+	 * @param userId - id of the user.
+	 * @param password - the password of the user.
+	 */
+	@DELETE
+	@Path("/{userId}")
+	void deleteUser(@PathParam("userId") String userId, @QueryParam("password") String password);
+
 
 }

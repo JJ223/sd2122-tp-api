@@ -1,5 +1,6 @@
 package tp1.server.resources;
 
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -7,6 +8,7 @@ import jakarta.inject.Singleton;
 import tp1.api.User;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
+import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
 
 @Singleton
@@ -109,6 +111,7 @@ public class JavaUsers implements Users{
             return result;
 
         users.remove(userId);
+
         return result;
     }
 
@@ -131,7 +134,6 @@ public class JavaUsers implements Users{
     }
 
     public Result<Boolean> userExists(String userId) {
-        System.out.println(userId);
         if(users.containsKey(userId))
             return Result.ok(true);
         return Result.error(Result.ErrorCode.NOT_FOUND);

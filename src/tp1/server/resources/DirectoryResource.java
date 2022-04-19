@@ -226,6 +226,25 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         return sharedFiles;
     }
 
+    @Override
+    public void deleteUser(String userId, String password) {
+        //TODO encontrar melho solucao para lidar com os ficheiros partilhados
+
+        System.out.println("Entrei");
+        directory.remove(userId);
+        System.out.println(userId);
+
+        for(List<FileInfo> userFiles : directory.values()) {
+            for(FileInfo fileInfo : userFiles) {
+                if(sharedFile(fileInfo, userId)){
+                    Set<String> sharedWith = fileInfo.getSharedWith();
+                    sharedWith.remove(userId);
+                }
+            }
+        }
+
+    }
+
     private FileInfo getFileInfoUser(String userId, String filename){
         List<FileInfo> files = directory.get(userId);
 
