@@ -199,7 +199,31 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
 
     @Override
     public List<FileInfo> lsFile(String userId, String password) {
-        return null;
+    	
+    	URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        RestUsersClient users = new RestUsersClient(userURI[0]);
+        
+        Result<User> res = users.getUser(userId, password);
+        if(!res.isOK())
+        	getErrorException(res.error());
+        
+        if(!directory.containsKey(userId)) {
+            Log.info("User with userid does not have files.");
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+    	
+        List<FileInfo> sharedFiles = new LinkedList<FileInfo>();
+        
+        for(List<FileInfo> userFiles : directory.values()) {
+        	for(FileInfo fileInfo : userFiles) {
+            	if(sharedFile(fileInfo, userId))
+            		sharedFiles.add(fileInfo);
+            }
+        }
+        
+        sharedFiles.addAll(directory.get(userId));
+        
+        return sharedFiles;
     }
 
     private FileInfo getFileInfoUser(String userId, String filename){
