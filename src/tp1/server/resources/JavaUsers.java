@@ -47,6 +47,14 @@ public class JavaUsers implements Users{
         Log.info("getUser : user = " + userId + "; pwd = " + password);
 
         User user = users.get(userId);
+
+        /**
+        System.out.println("ALL USERS");
+        for(String s :users.keySet())
+            System.out.println(s);
+        System.out.println("END");
+         */
+
         // Check if user exists
         if( user == null ) {
             Log.info("User does not exist.");

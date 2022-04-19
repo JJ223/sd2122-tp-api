@@ -202,16 +202,11 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     	
     	URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
-        
+
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
         	getErrorException(res.error());
-        
-        if(!directory.containsKey(userId)) {
-            Log.info("User with userid does not have files.");
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-    	
+
         List<FileInfo> sharedFiles = new LinkedList<FileInfo>();
         
         for(List<FileInfo> userFiles : directory.values()) {
@@ -220,8 +215,8 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
             		sharedFiles.add(fileInfo);
             }
         }
-        
-        sharedFiles.addAll(directory.get(userId));
+        if(directory.containsKey(userId))
+            sharedFiles.addAll(directory.get(userId));
         
         return sharedFiles;
     }
