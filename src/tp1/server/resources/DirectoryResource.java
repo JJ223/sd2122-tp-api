@@ -168,7 +168,7 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
         
-        Result<User> res = users.getUser(userId, password);
+        Result<User> res = users.getUser(accUserId, password);
         if(!res.isOK())
         	getErrorException(res.error());
         
@@ -183,15 +183,10 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        System.out.println("UserId: "+userId+" UserIdShare: "+accUserId+"FILENAME: "+filename);
-        System.out.println("SHARED: " + sharedFile(fI,accUserId)  );
-        System.out.println("EQUALS: "+userId.equals(accUserId));
-
-        if( !userId.equals(accUserId) && !sharedFile(fI,accUserId) ){
+        if(!accUserId.equals(fI.getOwner()) && !sharedFile(fI,accUserId)){
             Log.info("User does not have access to file.");
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
-        System.out.println("Passou o throw");
 
         throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
 
@@ -216,11 +211,6 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
 
     private boolean sharedFile(FileInfo fI, String accUserId){
         Set<String> sharedWith = fI.getSharedWith();
-        System.out.println("Start");
-        for (String s: sharedWith) {
-            System.out.println(s);
-        }
-        System.out.println("END");
         return sharedWith.contains(accUserId);
     }
 
