@@ -155,6 +155,7 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         }
 
         if(sharedFile(fI,userIdShare)) {
+            //TODO fazer um metodo para isto
             Set<String> shared = fI.getSharedWith();
             shared.remove(userIdShare);
         }
@@ -163,7 +164,6 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     @Override
     public byte[] getFile(String filename, String userId, String accUserId, String password) {
 
-        //TODO verificar se o accUserId exists
         //user server
         URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
@@ -171,6 +171,10 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         Result<User> res = users.getUser(accUserId, password);
         if(!res.isOK())
         	getErrorException(res.error());
+
+        Result<Boolean> res2 = users.userExists(userId);
+        if(!res2.isOK())
+            getErrorException(res2.error());
         
         if(!directory.containsKey(userId)) {
             Log.info("User with userid does not have files.");
