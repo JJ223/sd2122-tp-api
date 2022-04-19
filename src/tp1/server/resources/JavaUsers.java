@@ -127,12 +127,11 @@ public class JavaUsers implements Users{
             if( u.getFullName().toUpperCase().indexOf(pattern.toUpperCase()) != -1) list.add( new User(u.getUserId(),u.getFullName(),u.getEmail(),""));
         });
 
-
-
         return Result.ok(list);
     }
 
     public Result<Boolean> userExists(String userId) {
+        System.out.println(userId);
         if(users.containsKey(userId))
             return Result.ok(true);
         return Result.error(Result.ErrorCode.NOT_FOUND);

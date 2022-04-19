@@ -105,6 +105,7 @@ public interface RestUsers {
 	 * 			404 if the user does not exist
 	 */
 	@GET
+	@Path("/{userId}")
 	boolean userExists(@PathParam("userId") String userId);
 
 
