@@ -9,6 +9,7 @@ import tp1.api.service.util.Users;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
@@ -48,14 +49,13 @@ public class JavaFiles implements Files {
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
 
-        File file = new File(fileId);
-
-        if(file.exists()){
+        try {
+            java.nio.file.Files.delete(Paths.get(fileId));
+        }catch (IOException e) {
             Log.info("File does not exist.");
             return Result.error(Result.ErrorCode.NOT_FOUND );
         }
 
-        file.delete();
         return Result.ok();
     }
 
@@ -72,18 +72,12 @@ public class JavaFiles implements Files {
         byte[] file;
         try {
             file = java.nio.file.Files.readAllBytes(Paths.get(fileId));
-
-            if(file == null){
-                Log.info("File does not exist.");
-                return Result.error(Result.ErrorCode.NOT_FOUND );
-            }
-
             return Result.ok(file);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.info("File does not exist.");
+            return Result.error(Result.ErrorCode.NOT_FOUND);
         }
 
-        return null;
     }
 }
