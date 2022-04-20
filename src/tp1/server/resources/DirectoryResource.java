@@ -22,11 +22,13 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     private static Logger Log = Logger.getLogger(DirectoryResource.class.getName());
     private Discovery d;
     private Map<String, List<FileInfo>> directory;
+    private ServerCapacityManager sv;
 
     public DirectoryResource(Discovery d) {
         this.d = d;
         directory = new HashMap<>();
         d.listener();
+        sv = new ServerCapacityManager("files", d);
     }
 
     @Override
@@ -42,7 +44,6 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
 
         String filedId = String.format("%s.%s", userId, filename);
 
-        URI fileServerURI = null;
         FileInfo f;
 
         if(!directory.containsKey(userId)){
@@ -50,35 +51,33 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         }else{
             f = getFileInfoUser(userId, filename);
             if(f != null) {
-                fileServerURI = URI.create(f.getFileURL().replace("/files/" + filedId, ""));
+                URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + filedId, ""));
                 RestFileClient files = new RestFileClient(fileServerURI);
                 files.writeFile(filedId, data, "");
+                sv.updateCapacity(fileServerURI, 1);
 
                 return f;
             }
         }
 
         //choose file server
-        URI[] fileURI = d.knownUrisOf("files");
-        Random r = new Random();
-        int result = r.nextInt(fileURI.length);
-
-        String fileUrl = String.format("%s%s/%s.%s", fileURI[result], RestFiles.PATH, userId, filename);
+        Iterator<Entry<URI, Integer>> fileURIs = sv.getServers();
+        URI uri = fileURIs.next().getURI();
+        String fileUrl = String.format("%s%s/%s.%s", uri.toString(), RestFiles.PATH, userId, filename);
 
         //add file to file server
         try{
-            fileServerURI = fileURI[result];
-            RestFileClient files = new RestFileClient(fileServerURI);
+            System.out.println("first" + uri);
+            RestFileClient files = new RestFileClient(uri);
             files.writeFile(filedId, data, "");
+            sv.updateCapacity(uri, 1);
         } catch (Exception e){
-            if(fileURI.length > 1){
-                int result2 = r.nextInt(fileURI.length);
-                while(result2 == result)
-                    result2 = r.nextInt(fileURI.length);
-
-                fileServerURI = fileURI[result2];
-                RestFileClient files = new RestFileClient(fileServerURI);
+            if(fileURIs.hasNext()){
+                System.out.println("second"+uri);
+                uri = fileURIs.next().getURI();
+                RestFileClient files = new RestFileClient(uri);
                 files.writeFile(filedId, data, "");
+                sv.updateCapacity(uri, 1);
             }
         }
 
@@ -87,7 +86,6 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         directory.get(userId).add(f);
 
         return f;
-
 
     }
 
@@ -113,6 +111,7 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         		files.deleteFile(filedId, "");
                 List<FileInfo> l = directory.get(userId);
                 l.remove(fileInfo);
+                sv.updateCapacity(fileServerURI, -1);
         	} else {
         		Log.info("File does not exist.");
         		throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -216,10 +215,12 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     	URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
+        System.out.println("first");
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
         	getErrorException(res.error());
 
+        System.out.println("second");
         List<FileInfo> sharedFiles = new LinkedList<FileInfo>();
         
         for(List<FileInfo> userFiles : directory.values()) {
@@ -228,9 +229,10 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
             		sharedFiles.add(fileInfo);
             }
         }
+        System.out.println("third");
         if(directory.containsKey(userId))
             sharedFiles.addAll(directory.get(userId));
-        
+        System.out.println("forth");
         return sharedFiles;
     }
 
