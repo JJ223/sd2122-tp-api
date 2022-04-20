@@ -127,7 +127,6 @@ public class RestUsersClient extends RestClient implements Users {
 		return getResultError(r);
 	}
 
-	//TODO REQUEST MIGHT NOT WORK CHECK LATER
 	private Result<Boolean> clt_userExists( String userId ){
 		Response r = target.path(userId)
 				.request()

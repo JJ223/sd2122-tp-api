@@ -17,11 +17,11 @@ import tp1.api.service.util.Result;
 public class RestClient {
 	private static Logger Log = Logger.getLogger(RestClient.class.getName());
 
-	protected static final int READ_TIMEOUT = 5000;
+	protected static final int READ_TIMEOUT = 10000;
 	protected static final int CONNECT_TIMEOUT = 5000;
 
 	protected static final int RETRY_SLEEP = 3000;
-	protected static final int MAX_RETRIES = 10;
+	protected static final int MAX_RETRIES = 3;
 
 	final URI serverURI;
 	final Client client;

@@ -12,6 +12,7 @@ import tp1.clients.RestUsersClient;
 import tp1.server.Discovery;
 import tp1.server.UsersServer;
 
+import java.net.ConnectException;
 import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
@@ -61,17 +62,29 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
         URI[] fileURI = d.knownUrisOf("files");
         Random r = new Random();
         int result = r.nextInt(fileURI.length);
-        fileServerURI = fileURI[result];
 
         String fileUrl = String.format("%s%s/%s.%s", fileURI[result], RestFiles.PATH, userId, filename);
+
+        //add file to file server
+        try{
+            fileServerURI = fileURI[result];
+            RestFileClient files = new RestFileClient(fileServerURI);
+            files.writeFile(filedId, data, "");
+        } catch (Exception e){
+            if(fileURI.length > 1){
+                int result2 = r.nextInt(fileURI.length);
+                while(result2 == result)
+                    result2 = r.nextInt(fileURI.length);
+
+                fileServerURI = fileURI[result2];
+                RestFileClient files = new RestFileClient(fileServerURI);
+                files.writeFile(filedId, data, "");
+            }
+        }
 
         //Create newFileInfo
         f = new FileInfo(userId, filename, fileUrl, new HashSet<String>());
         directory.get(userId).add(f);
-
-        //add file to file server        
-        RestFileClient files = new RestFileClient(fileServerURI);
-        files.writeFile(filedId, data, "");
 
         return f;
 
@@ -225,10 +238,19 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     public void deleteUser(String userId, String password) {
         //TODO encontrar melho solucao para lidar com os ficheiros partilhados
 
+        List<FileInfo> userFiles = directory.get(userId);
+        for(FileInfo f : userFiles){
+            //TODO make this tring pretty
+            URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + f.getOwner()+ "."+f.getFilename(), ""));
+            RestFileClient files = new RestFileClient(fileServerURI);
+            files.deleteFile(f.getOwner()+ "."+f.getFilename(), "");
+
+        }
+
         directory.remove(userId);
 
-        for(List<FileInfo> userFiles : directory.values()) {
-            for(FileInfo fileInfo : userFiles) {
+        for(List<FileInfo> files : directory.values()) {
+            for(FileInfo fileInfo : files) {
                 if(sharedFile(fileInfo, userId)){
                     Set<String> sharedWith = fileInfo.getSharedWith();
                     sharedWith.remove(userId);
