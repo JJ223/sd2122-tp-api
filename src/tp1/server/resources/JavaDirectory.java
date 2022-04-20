@@ -54,28 +54,33 @@ public class JavaDirectory extends ServerResource implements Directory {
                 URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + filedId, ""));
                 RestFileClient files = new RestFileClient(fileServerURI);
                 files.writeFile(filedId, data, "");
-                sv.updateCapacity(fileServerURI, 1);
-
+                synchronized (sv) {
+                    sv.updateCapacity(fileServerURI, 1);
+                }
                 return Result.ok(f);
             }
         }
 
+        String fileUrl;
         //choose file server
+        synchronized (sv) {
         Iterator<Entry<URI, Integer>> fileURIs = sv.getServers();
         URI uri = fileURIs.next().getURI();
-        String fileUrl = String.format("%s%s/%s.%s", uri.toString(), RestFiles.PATH, userId, filename);
+        fileUrl = String.format("%s%s/%s.%s", uri.toString(), RestFiles.PATH, userId, filename);
 
-        //add file to file server
-        try{
-            RestFileClient files = new RestFileClient(uri);
-            files.writeFile(filedId, data, "");
-            sv.updateCapacity(uri, 1);
-        } catch (Exception e){
-            if(fileURIs.hasNext()){
-                uri = fileURIs.next().getURI();
+
+            //add file to file server
+            try {
                 RestFileClient files = new RestFileClient(uri);
                 files.writeFile(filedId, data, "");
                 sv.updateCapacity(uri, 1);
+            } catch (Exception e) {
+                if (fileURIs.hasNext()) {
+                    uri = fileURIs.next().getURI();
+                    RestFileClient files = new RestFileClient(uri);
+                    files.writeFile(filedId, data, "");
+                    sv.updateCapacity(uri, 1);
+                }
             }
         }
 
@@ -103,12 +108,16 @@ public class JavaDirectory extends ServerResource implements Directory {
         } else {
             FileInfo fileInfo = getFileInfoUser( userId, filename);
             if(fileInfo!=null) {
+
                 URI fileServerURI = URI.create(fileInfo.getFileURL().replace("/files/" + filedId, ""));
                 RestFileClient files = new RestFileClient(fileServerURI);
                 files.deleteFile(filedId, "");
                 List<FileInfo> l = directory.get(userId);
                 l.remove(fileInfo);
-                sv.updateCapacity(fileServerURI, -1);
+                synchronized (sv) {
+                    sv.updateCapacity(fileServerURI, -1);
+                }
+
             } else {
                 Log.info("File does not exist.");
                 return Result.error(Result.ErrorCode.NOT_FOUND);
