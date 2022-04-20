@@ -19,13 +19,13 @@ public class ServerCapacityManager {
         updateUris();
     }
 
-    public Iterator<Entry<URI,Integer>> getServers(){
+    public synchronized Iterator<Entry<URI,Integer>> getServers(){
         updateUris();
         Collections.sort(servers);
         return servers.iterator();
     }
 
-    public void updateCapacity(URI uri, int num){
+    public synchronized void updateCapacity(URI uri, int num){
         for( Entry e : servers){
             if(e.getURI().equals(uri))
                 e.updateNumFiles(num);
@@ -45,7 +45,7 @@ public class ServerCapacityManager {
         }
     }
 
-    private boolean contains(URI uri){
+    private synchronized boolean contains(URI uri){
         for( Entry<URI,Integer> e : servers){
             if(e.getURI().equals(uri))
                 return true;

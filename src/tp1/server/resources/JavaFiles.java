@@ -15,7 +15,10 @@ import java.util.logging.Logger;
 
 public class JavaFiles implements Files {
 
-    private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
+    private static Logger Log = Logger.getLogger(JavaFiles.class.getName());
+
+    public JavaFiles() {
+    }
 
     @Override
     public Result<Void> writeFile(String fileId, byte[] data, String token) {

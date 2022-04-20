@@ -2,6 +2,10 @@ package tp1.api.service.util;
 
 import java.util.*;
 
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import tp1.api.FileInfo;
 
 public interface Directory {
@@ -110,4 +114,13 @@ public interface Directory {
 	 *         BAD_REQUEST otherwise.
 	 */
 	Result<List<FileInfo>> lsFile(String userId, String password);
+
+	/**
+	 * Deletes User files from directory and removes the user from the sharedwith of the files shared with him
+	 *
+	 * @param userId - id of the user.
+	 * @param password - the password of the user.
+	 */
+	Result<Void> deleteUser(String userId, String password);
+
 }
