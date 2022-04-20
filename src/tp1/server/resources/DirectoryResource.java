@@ -67,13 +67,11 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
 
         //add file to file server
         try{
-            System.out.println("first" + uri);
             RestFileClient files = new RestFileClient(uri);
             files.writeFile(filedId, data, "");
             sv.updateCapacity(uri, 1);
         } catch (Exception e){
             if(fileURIs.hasNext()){
-                System.out.println("second"+uri);
                 uri = fileURIs.next().getURI();
                 RestFileClient files = new RestFileClient(uri);
                 files.writeFile(filedId, data, "");
@@ -215,12 +213,11 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
     	URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
-        System.out.println("first");
+
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
         	getErrorException(res.error());
 
-        System.out.println("second");
         List<FileInfo> sharedFiles = new LinkedList<FileInfo>();
         
         for(List<FileInfo> userFiles : directory.values()) {
@@ -229,10 +226,8 @@ public class DirectoryResource extends ServerResource implements RestDirectory {
             		sharedFiles.add(fileInfo);
             }
         }
-        System.out.println("third");
         if(directory.containsKey(userId))
             sharedFiles.addAll(directory.get(userId));
-        System.out.println("forth");
         return sharedFiles;
     }
 
