@@ -1,7 +1,6 @@
 package tp1.clients;
 
 import java.net.URI;
-import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -10,12 +9,11 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
 import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import tp1.api.service.util.Result;
 
-public class RestClient {
-	private static Logger Log = Logger.getLogger(RestClient.class.getName());
+public class Client {
+	private static Logger Log = Logger.getLogger(Client.class.getName());
 
 	protected static final int READ_TIMEOUT = 10000;
 	protected static final int CONNECT_TIMEOUT = 10000;
@@ -24,10 +22,10 @@ public class RestClient {
 	protected static final int MAX_RETRIES = 3;
 
 	final URI serverURI;
-	final Client client;
+	protected final jakarta.ws.rs.client.Client client;
 	final ClientConfig config;
 
-	RestClient(URI serverURI) {
+	protected Client(URI serverURI) {
 		this.serverURI = serverURI;
 		this.config = new ClientConfig();
 
@@ -59,9 +57,9 @@ public class RestClient {
 		}
 	}
 
-	protected <T> Result<T> getResultError(Response r) {
+	protected <T> Result<T> getResultError(Response.Status r) {
 		try {
-			Result.ErrorCode code = Result.ErrorCode.valueOf(Response.Status.fromStatusCode(r.getStatus()).name());
+			Result.ErrorCode code = Result.ErrorCode.valueOf(r.toString());
 			return Result.error(code);
 
 		} catch(IllegalArgumentException e) {

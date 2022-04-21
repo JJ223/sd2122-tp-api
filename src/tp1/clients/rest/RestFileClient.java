@@ -1,18 +1,18 @@
-package tp1.clients;
+package tp1.clients.rest;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Files;
 import tp1.api.service.util.Result;
+import tp1.clients.Client;
 
 import java.net.URI;
 
-public class RestFileClient extends RestClient implements Files {
+public class RestFileClient extends Client implements Files {
 
     final WebTarget target;
 
@@ -51,7 +51,7 @@ public class RestFileClient extends RestClient implements Files {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return Result.ok();
-        return getResultError(r);
+        return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 
     }
 
@@ -64,7 +64,7 @@ public class RestFileClient extends RestClient implements Files {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return Result.ok();
-        return getResultError(r);
+        return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 
     }
 
@@ -78,7 +78,7 @@ public class RestFileClient extends RestClient implements Files {
 
         if( r.getStatus() == Response.Status.OK.getStatusCode() && r.hasEntity() )
             return Result.ok(r.readEntity(new GenericType<byte[]>(){}));
-        return getResultError(r);
+        return getResultError(Response.Status.fromStatusCode(r.getStatus()));
     }
 
 }

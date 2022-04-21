@@ -9,8 +9,8 @@ import jakarta.inject.Singleton;
 import tp1.api.User;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
-import tp1.clients.RestUsersClient;
-import tp1.server.Discovery;
+import tp1.clients.rest.RestDirectoryClient;
+import tp1.server.rest.Discovery;
 
 @Singleton
 public class JavaUsers implements Users{
@@ -19,7 +19,9 @@ public class JavaUsers implements Users{
 
     private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
-    public JavaUsers() {
+    private Discovery d;
+    public JavaUsers( Discovery d) {
+        this.d = d;
     }
 
     public Result<String> createUser(User user) {
@@ -106,6 +108,10 @@ public class JavaUsers implements Users{
     public Result<User> deleteUser(String userId, String password) {
         Log.info("deleteUser : user = " + userId + "; pwd = " + password);
         //TODO DElete user files from system\
+
+        URI[] directoryURI = d.knownUrisOf("directory");
+        RestDirectoryClient directory = new RestDirectoryClient(directoryURI[0]);
+        directory.deleteUser(userId,password);
 
         Result<User> result = getUser(userId, password);
 

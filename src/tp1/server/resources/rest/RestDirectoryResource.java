@@ -1,34 +1,23 @@
-package tp1.server.resources;
+package tp1.server.resources.rest;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 import tp1.api.FileInfo;
-import tp1.api.User;
 import tp1.api.service.rest.RestDirectory;
-import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Directory;
-import tp1.api.service.util.Result;
-import tp1.api.service.util.Users;
-import tp1.clients.RestFileClient;
-import tp1.clients.RestUsersClient;
-import tp1.server.Discovery;
-import tp1.server.UsersServer;
+import tp1.server.resources.JavaDirectory;
+import tp1.server.rest.Discovery;
 
-import java.net.ConnectException;
-import java.net.URI;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-public class DirectoryResource extends ServerResource implements RestDirectory {
+public class RestDirectoryResource extends RestServerResource implements RestDirectory {
 
     private Discovery d;
 
-    private static Logger Log = Logger.getLogger(DirectoryResource.class.getName());
+    private static Logger Log = Logger.getLogger(RestDirectoryResource.class.getName());
 
     final Directory impl;
 
-    public DirectoryResource(Discovery d) {
+    public RestDirectoryResource(Discovery d) {
         this.d = d;
         d.listener();
         impl = new JavaDirectory(d);

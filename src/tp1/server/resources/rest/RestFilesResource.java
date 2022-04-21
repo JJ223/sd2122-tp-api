@@ -1,19 +1,20 @@
-package tp1.server.resources;
+package tp1.server.resources.rest;
 
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Files;
-import tp1.server.Discovery;
+import tp1.server.resources.JavaFiles;
+import tp1.server.rest.Discovery;
 
 
 import java.util.logging.Logger;
 
-public class FilesResource extends ServerResource implements RestFiles {
+public class RestFilesResource extends RestServerResource implements RestFiles {
 
-    private static Logger Log = Logger.getLogger(FilesResource.class.getName());
+    private static Logger Log = Logger.getLogger(RestFilesResource.class.getName());
 
     final Files impl = new JavaFiles();
 
-    public FilesResource( Discovery d) {
+    public RestFilesResource(Discovery d) {
         d.listener();
     }
 

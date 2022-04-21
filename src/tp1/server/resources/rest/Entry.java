@@ -1,6 +1,4 @@
-package tp1.server.resources;
-
-import java.net.URI;
+package tp1.server.resources.rest;
 
 public class Entry<URI, Integer> implements Comparable<Entry<URI, Integer>>{
 

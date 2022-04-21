@@ -1,4 +1,4 @@
-package tp1.server;
+package tp1.server.rest;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -9,14 +9,12 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import tp1.server.resources.UsersResource;
-import tp1.server.util.CustomLoggingFilter;
-import tp1.server.util.GenericExceptionMapper;
+import tp1.server.resources.rest.RestUsersResource;
 import util.Debug;
 
-public class UsersServer {
+public class RestUsersServer {
 
-	private static Logger Log = Logger.getLogger(UsersServer.class.getName());
+	private static Logger Log = Logger.getLogger(RestUsersServer.class.getName());
 
 	static {
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -38,7 +36,7 @@ public class UsersServer {
 			Discovery d = new Discovery(DISCOVERY_ADDR, SERVICE, serverURI);
 			d.start();
 
-			config.register( new UsersResource(d) );
+			config.register( new RestUsersResource(d) );
 			//config.register(CustomLoggingFilter.class);
 			//config.register(GenericExceptionMapper.class);
 

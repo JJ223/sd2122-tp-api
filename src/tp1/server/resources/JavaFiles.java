@@ -1,15 +1,11 @@
 package tp1.server.resources;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 import tp1.api.service.util.Files;
 import tp1.api.service.util.Result;
-import tp1.api.service.util.Users;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 

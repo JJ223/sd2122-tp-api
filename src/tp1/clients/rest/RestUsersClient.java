@@ -1,4 +1,4 @@
-package tp1.clients;
+package tp1.clients.rest;
 
 import java.net.URI;
 import java.util.List;
@@ -9,13 +9,13 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import tp1.api.FileInfo;
 import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
+import tp1.clients.Client;
 
-public class RestUsersClient extends RestClient implements Users {
+public class RestUsersClient extends Client implements Users {
 
 	final WebTarget target;
 	
@@ -64,7 +64,6 @@ public class RestUsersClient extends RestClient implements Users {
 		});
 	}
 
-
 	private Result<String> clt_createUser( User user) {
 		
 		Response r = target.request()
@@ -73,7 +72,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
 			return Result.ok(r.readEntity(new GenericType<String>(){}));
-		return getResultError(r);
+		return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 	}
 
 	private Result<User> clt_deleteUser( String userId, String password ) {
@@ -86,7 +85,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
-		return getResultError(r);
+		return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 	}
 	
 	private Result<List<User>> clt_searchUsers(String pattern) {
@@ -98,7 +97,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity() )
 			return Result.ok(r.readEntity(new GenericType<List<User>>() {}));
-		return getResultError(r);
+		return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 	}
 
 	private Result<User> clt_getUser( String userId, String password ) {
@@ -111,7 +110,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
-		return getResultError(r);
+		return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 	}
 
 	private Result<User> clt_updateUser( String userId, String password, User user ) {
@@ -124,7 +123,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(User.class));
-		return getResultError(r);
+		return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 	}
 
 	private Result<Boolean> clt_userExists( String userId ){
@@ -134,7 +133,7 @@ public class RestUsersClient extends RestClient implements Users {
 
 		if( r.getStatus() == Status.OK.getStatusCode() && r.hasEntity())
 			return Result.ok(r.readEntity(new GenericType<Boolean>(){}));
-		return getResultError(r);
+		return getResultError(Response.Status.fromStatusCode(r.getStatus()));
 	}
 
 }

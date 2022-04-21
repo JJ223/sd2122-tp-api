@@ -7,17 +7,21 @@ import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Directory;
 import tp1.api.service.util.Result;
-import tp1.clients.RestFileClient;
-import tp1.clients.RestUsersClient;
-import tp1.server.Discovery;
-import tp1.server.UsersServer;
+import tp1.clients.rest.RestFileClient;
+import tp1.clients.rest.RestUsersClient;
+import tp1.clients.soap.SoapUsersClient;
+import tp1.server.resources.rest.Entry;
+import tp1.server.resources.rest.ServerCapacityManager;
+import tp1.server.resources.rest.RestServerResource;
+import tp1.server.rest.Discovery;
+import tp1.server.rest.RestUsersServer;
 
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-public class JavaDirectory extends ServerResource implements Directory {
+public class JavaDirectory extends RestServerResource implements Directory {
 
     private static Logger Log = Logger.getLogger(JavaDirectory.class.getName());
     private Discovery d;
@@ -128,7 +132,7 @@ public class JavaDirectory extends ServerResource implements Directory {
 
     @Override
     public Result<Void> shareFile(String filename, String userId, String userIdShare, String password) {
-        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
@@ -156,7 +160,7 @@ public class JavaDirectory extends ServerResource implements Directory {
     @Override
     public Result<Void> unshareFile(String filename, String userId, String userIdShare, String password) {
 
-        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
@@ -185,7 +189,7 @@ public class JavaDirectory extends ServerResource implements Directory {
     public Result<byte[]> getFile(String filename, String userId, String accUserId, String password) {
 
         //user server
-        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(accUserId, password);
@@ -212,6 +216,7 @@ public class JavaDirectory extends ServerResource implements Directory {
             return Result.error(Result.ErrorCode.FORBIDDEN);
         }
 
+        //TODO testar se é rest ou soap
         throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
 
 
@@ -220,7 +225,7 @@ public class JavaDirectory extends ServerResource implements Directory {
     @Override
     public Result<List<FileInfo>> lsFile(String userId, String password) {
 
-        URI[] userURI = d.knownUrisOf(UsersServer.SERVICE);
+        URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
         RestUsersClient users = new RestUsersClient(userURI[0]);
 
 

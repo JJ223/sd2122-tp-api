@@ -1,10 +1,10 @@
-package tp1.server.resources;
+package tp1.server.resources.rest;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 import tp1.api.service.util.Result;
 
-public class ServerResource {
+public class RestServerResource {
 	protected void getErrorException(Result.ErrorCode err) {
 		switch(err) {
 		case CONFLICT:

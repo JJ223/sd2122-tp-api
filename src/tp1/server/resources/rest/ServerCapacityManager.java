@@ -1,6 +1,7 @@
-package tp1.server.resources;
+package tp1.server.resources.rest;
 
-import tp1.server.Discovery;
+import tp1.server.resources.rest.Entry;
+import tp1.server.rest.Discovery;
 
 import java.net.URI;
 import java.util.*;

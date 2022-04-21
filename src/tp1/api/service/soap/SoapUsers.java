@@ -4,6 +4,9 @@ import java.util.List;
 
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import tp1.api.User;
 
 @WebService(serviceName=SoapUsers.NAME, targetNamespace=SoapUsers.NAMESPACE, endpointInterface=SoapUsers.INTERFACE)
@@ -53,5 +56,15 @@ public interface SoapUsers {
 	 * @throws UsersException otherwise
 	 */
 	@WebMethod
-	List<User> searchUsers(String pattern) throws UsersException;	
+	List<User> searchUsers(String pattern) throws UsersException;
+
+	/**
+	 * Verifies if the user with the given userid exists
+	 *
+	 * @param userId the id of the user
+	 * @return	200 if the user exists
+	 * 			404 if the user does not exist
+	 */
+	@WebMethod
+	boolean userExists( String userId) throws UsersException;
 }
