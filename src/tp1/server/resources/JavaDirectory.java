@@ -221,12 +221,12 @@ public class JavaDirectory extends RestServerResource implements Directory {
             return Result.error(Result.ErrorCode.FORBIDDEN);
         }
 
-        if( fI.getFileURL().toString().endsWith("rest"))
+        String filedId = String.format("%s.%s", userId, filename);
+        String uri = fI.getFileURL().replace("/files/" + filedId, "");
+        if( uri.endsWith("rest"))
             throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
         else {
-            String filedId = String.format("%s.%s", userId, filename);
-            URI fileServerURI = URI.create(fI.getFileURL().replace("/files/" + filedId, ""));
-            Files files = ClientFactory.getFilesClient(fileServerURI);
+            Files files = ClientFactory.getFilesClient(URI.create(uri));
             return files.getFile(filedId, "");
         }
 

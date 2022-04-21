@@ -9,14 +9,14 @@ import tp1.api.service.soap.SoapUsers;
 import tp1.api.service.soap.UsersException;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
-import tp1.clients.Client;
+import tp1.clients.rest.Client;
 
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 
-public class SoapUsersClient extends Client implements Users {
+public class SoapUsersClient extends SoapClient implements Users {
 
     private SoapUsers users;
 
@@ -36,7 +36,8 @@ public class SoapUsersClient extends Client implements Users {
             try {
                 return Result.ok(users.createUser(user));
             } catch (UsersException e) {
-                    return getResultError(Response.Status.valueOf(e.getMessage()));
+                //System.out.println(Response.Status.valueOf(e.getMessage()).name());
+                return getResultError(Response.Status.valueOf(e.getMessage()));
             }
         });
     }
@@ -47,6 +48,7 @@ public class SoapUsersClient extends Client implements Users {
             try {
                 return Result.ok(users.getUser(userId, password));
             } catch (UsersException e) {
+                //System.out.println(Response.Status.valueOf(e.getMessage()).name());
                 return getResultError(Response.Status.valueOf(e.getMessage()));
             }
         });

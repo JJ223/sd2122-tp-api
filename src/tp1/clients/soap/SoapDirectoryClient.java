@@ -8,14 +8,14 @@ import tp1.api.FileInfo;
 import tp1.api.service.soap.*;
 import tp1.api.service.util.Directory;
 import tp1.api.service.util.Result;
-import tp1.clients.Client;
+import tp1.clients.rest.Client;
 
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 
-public class SoapDirectoryClient extends Client implements Directory {
+public class SoapDirectoryClient extends SoapClient implements Directory {
 
     private SoapDirectory directory;
 

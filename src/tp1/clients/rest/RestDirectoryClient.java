@@ -10,7 +10,6 @@ import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Directory;
 import tp1.api.service.util.Result;
-import tp1.clients.Client;
 
 import java.net.URI;
 import java.util.List;

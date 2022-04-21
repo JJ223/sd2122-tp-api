@@ -115,6 +115,7 @@ public class JavaUsers implements Users{
         Directory directory = ClientFactory.getDirectoryClient(directoryURI[0]);
         directory.deleteUser(userId,password);
 
+
         Result<User> result = getUser(userId, password);
 
         if(!result.isOK())

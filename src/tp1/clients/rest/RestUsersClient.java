@@ -13,7 +13,6 @@ import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
-import tp1.clients.Client;
 
 public class RestUsersClient extends Client implements Users {
 

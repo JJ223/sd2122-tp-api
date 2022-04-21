@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.Response;
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Files;
 import tp1.api.service.util.Result;
-import tp1.clients.Client;
 
 import java.net.URI;
 

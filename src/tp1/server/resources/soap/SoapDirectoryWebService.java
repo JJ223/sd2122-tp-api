@@ -1,9 +1,11 @@
 package tp1.server.resources.soap;
 
+import jakarta.jws.WebService;
 import tp1.api.FileInfo;
 import tp1.api.service.soap.DirectoryException;
 import tp1.api.service.soap.FilesException;
 import tp1.api.service.soap.SoapDirectory;
+import tp1.api.service.soap.SoapUsers;
 import tp1.api.service.util.Directory;
 import tp1.api.service.util.Files;
 import tp1.server.resources.JavaDirectory;
@@ -12,6 +14,7 @@ import tp1.server.rest.Discovery;
 
 import java.util.List;
 
+@WebService(serviceName= SoapDirectory.NAME, targetNamespace=SoapDirectory.NAMESPACE, endpointInterface=SoapDirectory.INTERFACE)
 public class SoapDirectoryWebService implements SoapDirectory {
 
     final Directory impl;

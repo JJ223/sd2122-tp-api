@@ -22,6 +22,7 @@ public class ClientFactory {
             try {
                 return new SoapUsersClient( serverURI );
             } catch (MalformedURLException e) {
+                System.out.println("URI ERROR");
                 return null;
             }
         }

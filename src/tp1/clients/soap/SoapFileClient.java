@@ -7,16 +7,15 @@ import jakarta.xml.ws.Service;
 import tp1.api.service.soap.FilesException;
 import tp1.api.service.soap.SoapFiles;
 import tp1.api.service.soap.SoapUsers;
-import tp1.api.service.soap.UsersException;
 import tp1.api.service.util.Files;
 import tp1.api.service.util.Result;
-import tp1.clients.Client;
+import tp1.clients.rest.Client;
 
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-public class SoapFileClient extends Client implements Files {
+public class SoapFileClient extends SoapClient implements Files {
 
     private SoapFiles files;
 
