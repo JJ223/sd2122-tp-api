@@ -6,9 +6,14 @@ import tp1.api.FileInfo;
 import tp1.api.User;
 import tp1.api.service.rest.RestFiles;
 import tp1.api.service.util.Directory;
+import tp1.api.service.util.Files;
 import tp1.api.service.util.Result;
+import tp1.api.service.util.Users;
+import tp1.clients.ClientFactory;
+import tp1.clients.rest.RestDirectoryClient;
 import tp1.clients.rest.RestFileClient;
 import tp1.clients.rest.RestUsersClient;
+import tp1.clients.soap.SoapDirectoryClient;
 import tp1.clients.soap.SoapUsersClient;
 import tp1.server.resources.rest.Entry;
 import tp1.server.resources.rest.ServerCapacityManager;
@@ -40,7 +45,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     public Result<FileInfo> writeFile(String filename, byte[] data, String userId, String password) {
         //user server
         URI[] userURI = d.knownUrisOf("users");
-        RestUsersClient users = new RestUsersClient(userURI[0]);
+        Users users = ClientFactory.getUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
@@ -56,7 +61,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
             f = getFileInfoUser(userId, filename);
             if(f != null) {
                 URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + filedId, ""));
-                RestFileClient files = new RestFileClient(fileServerURI);
+                Files files = ClientFactory.getFilesClient(fileServerURI);
                 files.writeFile(filedId, data, "");
                 synchronized (sv) {
                     sv.updateCapacity(fileServerURI, 1);
@@ -75,13 +80,13 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
             //add file to file server
             try {
-                RestFileClient files = new RestFileClient(uri);
+                Files files = ClientFactory.getFilesClient(uri);
                 files.writeFile(filedId, data, "");
                 sv.updateCapacity(uri, 1);
             } catch (Exception e) {
                 if (fileURIs.hasNext()) {
                     uri = fileURIs.next().getURI();
-                    RestFileClient files = new RestFileClient(uri);
+                    Files files = ClientFactory.getFilesClient(uri);
                     files.writeFile(filedId, data, "");
                     sv.updateCapacity(uri, 1);
                 }
@@ -98,7 +103,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     @Override
     public Result<Void> deleteFile(String filename, String userId, String password) {
         URI[] userURI = d.knownUrisOf("users");
-        RestUsersClient users = new RestUsersClient(userURI[0]);
+        Users users = ClientFactory.getUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
@@ -114,7 +119,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
             if(fileInfo!=null) {
 
                 URI fileServerURI = URI.create(fileInfo.getFileURL().replace("/files/" + filedId, ""));
-                RestFileClient files = new RestFileClient(fileServerURI);
+                Files files = ClientFactory.getFilesClient(fileServerURI);
                 files.deleteFile(filedId, "");
                 List<FileInfo> l = directory.get(userId);
                 l.remove(fileInfo);
@@ -133,7 +138,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     @Override
     public Result<Void> shareFile(String filename, String userId, String userIdShare, String password) {
         URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
-        RestUsersClient users = new RestUsersClient(userURI[0]);
+        Users users = ClientFactory.getUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
@@ -161,7 +166,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     public Result<Void> unshareFile(String filename, String userId, String userIdShare, String password) {
 
         URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
-        RestUsersClient users = new RestUsersClient(userURI[0]);
+        Users users = ClientFactory.getUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
@@ -190,7 +195,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         //user server
         URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
-        RestUsersClient users = new RestUsersClient(userURI[0]);
+        Users users = ClientFactory.getUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(accUserId, password);
         if(!res.isOK())
@@ -216,8 +221,14 @@ public class JavaDirectory extends RestServerResource implements Directory {
             return Result.error(Result.ErrorCode.FORBIDDEN);
         }
 
-        //TODO testar se é rest ou soap
-        throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
+        if( fI.getFileURL().toString().endsWith("rest"))
+            throw new WebApplicationException(Response.temporaryRedirect(URI.create(fI.getFileURL())).build());
+        else {
+            String filedId = String.format("%s.%s", userId, filename);
+            URI fileServerURI = URI.create(fI.getFileURL().replace("/files/" + filedId, ""));
+            Files files = ClientFactory.getFilesClient(fileServerURI);
+            return files.getFile(filedId, "");
+        }
 
 
     }
@@ -226,7 +237,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     public Result<List<FileInfo>> lsFile(String userId, String password) {
 
         URI[] userURI = d.knownUrisOf(RestUsersServer.SERVICE);
-        RestUsersClient users = new RestUsersClient(userURI[0]);
+        Users users = ClientFactory.getUsersClient(userURI[0]);
 
 
         Result<User> res = users.getUser(userId, password);
@@ -255,7 +266,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
         for(FileInfo f : userFiles){
             //TODO make this tring pretty
             URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + f.getOwner()+ "."+f.getFilename(), ""));
-            RestFileClient files = new RestFileClient(fileServerURI);
+            Files files = ClientFactory.getFilesClient(fileServerURI);
             files.deleteFile(f.getOwner()+ "."+f.getFilename(), "");
 
         }
