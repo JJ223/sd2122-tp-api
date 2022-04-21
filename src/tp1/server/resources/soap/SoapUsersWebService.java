@@ -5,12 +5,18 @@ import tp1.api.service.soap.SoapUsers;
 import tp1.api.service.soap.UsersException;
 import tp1.api.service.util.Users;
 import tp1.server.resources.JavaUsers;
+import tp1.server.rest.Discovery;
 
 import java.util.List;
 
 public class SoapUsersWebService implements SoapUsers {
 
-    final Users impl = new JavaUsers();
+    final Users impl;
+
+    public SoapUsersWebService(Discovery d){
+        d.listener();
+        impl= new JavaUsers(d);
+    }
 
     @Override
     public String createUser(User user) throws UsersException {

@@ -32,7 +32,7 @@ public class SoapUsersServer {
 
         Discovery d = new Discovery(DISCOVERY_ADDR, SERVICE_NAME, serverURI);
         d.start();
-        Endpoint.publish(serverURI.replace(ip, "0.0.0.0"), new SoapUsersWebService());
+        Endpoint.publish(serverURI.replace(ip, "0.0.0.0"), new SoapUsersWebService(d));
 
         Log.info(String.format("%s Soap Server ready @ %s\n", SERVICE_NAME, serverURI));
     }

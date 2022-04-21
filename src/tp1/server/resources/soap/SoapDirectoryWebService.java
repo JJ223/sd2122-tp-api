@@ -17,6 +17,7 @@ public class SoapDirectoryWebService implements SoapDirectory {
     final Directory impl;
 
     public SoapDirectoryWebService( Discovery d){
+        d.listener();
         impl = new JavaDirectory(d);
     }
 

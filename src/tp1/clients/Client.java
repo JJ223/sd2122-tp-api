@@ -59,7 +59,7 @@ public class Client {
 
 	protected <T> Result<T> getResultError(Response.Status r) {
 		try {
-			Result.ErrorCode code = Result.ErrorCode.valueOf(r.toString());
+			Result.ErrorCode code = Result.ErrorCode.valueOf(r.name());
 			return Result.error(code);
 
 		} catch(IllegalArgumentException e) {

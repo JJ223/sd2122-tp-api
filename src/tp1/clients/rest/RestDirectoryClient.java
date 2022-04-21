@@ -87,7 +87,6 @@ public class RestDirectoryClient extends Client implements Directory {
     }
 
     private Result<FileInfo> clt_writeFile( String filename, byte[] data, String userId, String password) {
-    	System.out.println("Inside Rest DirectoryClient");
 
         Response r = target.path(String.format("%s.%s", userId, filename))
         		.queryParam(RestUsers.PASSWORD, password)
