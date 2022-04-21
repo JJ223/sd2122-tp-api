@@ -7,8 +7,10 @@ import java.util.logging.Logger;
 
 import jakarta.inject.Singleton;
 import tp1.api.User;
+import tp1.api.service.util.Directory;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
+import tp1.clients.ClientFactory;
 import tp1.clients.rest.RestDirectoryClient;
 import tp1.server.rest.Discovery;
 
@@ -110,7 +112,7 @@ public class JavaUsers implements Users{
         //TODO DElete user files from system\
 
         URI[] directoryURI = d.knownUrisOf("directory");
-        RestDirectoryClient directory = new RestDirectoryClient(directoryURI[0]);
+        Directory directory = ClientFactory.getDirectoryClient(directoryURI[0]);
         directory.deleteUser(userId,password);
 
         Result<User> result = getUser(userId, password);
