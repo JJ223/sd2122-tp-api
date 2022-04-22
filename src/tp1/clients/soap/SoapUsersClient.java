@@ -15,20 +15,32 @@ import tp1.clients.rest.Client;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 public class SoapUsersClient extends SoapClient implements Users {
 
     private SoapUsers users;
 
-    public SoapUsersClient(URI serverURI) throws MalformedURLException {
+    public SoapUsersClient(URI serverURI) {
         super(serverURI);
         QName qname = new QName(SoapUsers.NAMESPACE, SoapUsers.NAME);
-        Service service = Service.create( URI.create(serverURI+ "?wsdl").toURL(), qname);
+        Service service = Service.create( makeURI(serverURI), qname);
         this.users = service.getPort(SoapUsers.class);
 
         ((BindingProvider) users).getRequestContext().put(BindingProviderProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
         ((BindingProvider) users).getRequestContext().put(BindingProviderProperties.REQUEST_TIMEOUT, READ_TIMEOUT);
+    }
+
+    private URL makeURI(URI serverURI){
+        try {
+            System.out.println("URLFROMURI: "+serverURI);
+            return URI.create(serverURI + "?wsdl").toURL();
+        } catch (MalformedURLException e) {
+            System.out.println("URL ERROR");
+            //e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

@@ -14,19 +14,31 @@ import tp1.clients.rest.Client;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
 public class SoapFileClient extends SoapClient implements Files {
 
     private SoapFiles files;
 
-    public SoapFileClient(URI serverURI) throws MalformedURLException {
+    public SoapFileClient(URI serverURI){
         super( serverURI );
         QName qname = new QName(SoapFiles.NAMESPACE, SoapFiles.NAME);
-        Service service = Service.create( URI.create(serverURI + "?wsdl").toURL(), qname);
+        Service service = Service.create( makeURI(serverURI), qname);
         this.files = service.getPort(SoapFiles.class);
 
         ((BindingProvider) files).getRequestContext().put(BindingProviderProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
         ((BindingProvider) files).getRequestContext().put(BindingProviderProperties.REQUEST_TIMEOUT, READ_TIMEOUT);
+    }
+
+    private URL makeURI(URI serverURI){
+        try {
+            System.out.println("URLFROMURI: "+serverURI);
+            return URI.create(serverURI + "?wsdl").toURL();
+        } catch (MalformedURLException e) {
+            System.out.println("URL ERROR");
+            //e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

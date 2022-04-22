@@ -114,11 +114,9 @@ public class JavaUsers implements Users{
 
 
         URI[] directoryURI = d.knownUrisOf("directory");
-        System.out.println(" JAVA USers DIRECTORY URI: "+directoryURI[0]);
         Directory directory = ClientFactory.getDirectoryClient(directoryURI[0]);
-        System.out.println(" JAVA USers After Factory " + directory);
         Result<Void> r = directory.deleteUser(userId, password);
-        System.out.println(" JAVA USers After delete User " + r.isOK());
+
         if (!r.isOK())
             return Result.error(r.error());
 

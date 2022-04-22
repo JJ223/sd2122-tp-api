@@ -44,7 +44,9 @@ public class JavaDirectory extends RestServerResource implements Directory {
     public Result<FileInfo> writeFile(String filename, byte[] data, String userId, String password) {
         //user server
         URI[] userURI = d.knownUrisOf("users");
+        System.out.println("BEFORE USERS: "+userURI[0]);
         Users users = ClientFactory.getUsersClient(userURI[0]);
+        System.out.println("AFTER USERS");
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
@@ -263,13 +265,16 @@ public class JavaDirectory extends RestServerResource implements Directory {
         System.out.println("ENTREI NO DELETE USER");
 
         List<FileInfo> userFiles = directory.get(userId);
-        for(FileInfo f : userFiles){
-            URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + f.getOwner()+ "."+f.getFilename(), ""));
-            System.out.println(fileServerURI.toString());
-            Files files = ClientFactory.getFilesClient(fileServerURI);
-            files.deleteFile(f.getOwner()+ "."+f.getFilename(), "");
+        if(userFiles != null){
+            for(FileInfo f : userFiles){
+                URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + f.getOwner()+ "."+f.getFilename(), ""));
+                System.out.println(fileServerURI.toString());
+                Files files = ClientFactory.getFilesClient(fileServerURI);
+                files.deleteFile(f.getOwner()+ "."+f.getFilename(), "");
 
+            }
         }
+
 
         directory.remove(userId);
 

@@ -19,11 +19,7 @@ public class ClientFactory {
         if( serverURI.toString().endsWith("rest"))
             return new RestUsersClient( serverURI );
         else {
-            try {
-                return new SoapUsersClient( serverURI );
-            } catch (MalformedURLException e) {
-                return null;
-            }
+            return new SoapUsersClient( serverURI );
         }
     }
 
@@ -31,11 +27,7 @@ public class ClientFactory {
         if( serverURI.toString().endsWith("rest"))
             return new RestFileClient( serverURI );
         else {
-            try {
-                return new SoapFileClient( serverURI );
-            } catch (MalformedURLException e) {
-                return null;
-            }
+            return new SoapFileClient( serverURI );
         }
     }
 

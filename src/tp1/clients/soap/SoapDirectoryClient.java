@@ -4,6 +4,7 @@ import com.sun.xml.ws.client.BindingProviderProperties;
 import jakarta.ws.rs.core.Response;
 import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.Service;
+import jakarta.xml.ws.WebServiceFeature;
 import tp1.api.FileInfo;
 import tp1.api.service.soap.*;
 import tp1.api.service.util.Directory;
@@ -24,23 +25,14 @@ public class SoapDirectoryClient extends SoapClient implements Directory {
 
     public SoapDirectoryClient(URI serverURI) {
         super( serverURI );
-        System.out.println("SoapDIrectoryCLient");
         this.qname = new QName(SoapDirectory.NAMESPACE, SoapDirectory.NAME);
-        System.out.println("qname Passed" +serverURI.toString());
-        System.out.println("URI:CREATE: "+URI.create(serverURI + "?wsdl"));
-        System.out.println("TO URLS: "+makeURI(serverURI));
-        System.out.println("After TO URLs");
-        URL url = makeURI(serverURI);
-        System.out.println("After MAKe URL: "+ url);
-        System.out.println("QName"+ qname.toString());
-        this.service = Service.create(url, qname);
-        System.out.println("service Passed");
+        ;
+        this.service = Service.create(makeURI(serverURI), qname);
+
         this.directory = service.getPort(SoapDirectory.class);
-        System.out.println("directoru Passed");
 
         ((BindingProvider) directory).getRequestContext().put(BindingProviderProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
         ((BindingProvider) directory).getRequestContext().put(BindingProviderProperties.REQUEST_TIMEOUT, READ_TIMEOUT);
-        System.out.println("END SoapDIrectoryCLient");
 
     }
 
@@ -50,7 +42,7 @@ public class SoapDirectoryClient extends SoapClient implements Directory {
             return URI.create(serverURI + "?wsdl").toURL();
         } catch (MalformedURLException e) {
             System.out.println("URL ERROR");
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
     }

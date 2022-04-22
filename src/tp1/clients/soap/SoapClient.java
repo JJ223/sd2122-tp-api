@@ -1,6 +1,7 @@
 package tp1.clients.soap;
 
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
@@ -41,15 +42,15 @@ public class SoapClient {
         for (int i = 0; i < MAX_RETRIES; i++)
             try {
                 return func.get();
-            } catch (ProcessingException x) {
+            } catch (WebApplicationException x) {
                 Log.fine("ProcessingException: " + x.getMessage());
                 sleep(RETRY_SLEEP);
             } catch (Exception x) {
                 Log.fine("Exception: " + x.getMessage());
                 x.printStackTrace();
-                break;
+                sleep(RETRY_SLEEP);
             }
-        return null;
+        return (T) Result.error(Result.ErrorCode.CONFLICT);
     }
 
     private void sleep(int ms) {
