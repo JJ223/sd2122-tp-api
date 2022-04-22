@@ -14,11 +14,12 @@ public class SoapUsersServer {
     public static final int PORT = 8080;
     public static final String SERVICE_NAME = "users";
     public static String SERVER_BASE_URI = "http://%s:%s/soap";
-    private static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("226.226.226.226", 2266);
+    private static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("227.227.227.227", 2277);
 
     private static Logger Log = Logger.getLogger(SoapUsersServer.class.getName());
 
     public static void main(String[] args) throws Exception {
+        System.out.println("SERRRRRRRRVVVVVVVVEEEEEEERRRRRRRRR");
 
         System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
         System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
@@ -29,7 +30,7 @@ public class SoapUsersServer {
 
         String ip = InetAddress.getLocalHost().getHostAddress();
         String serverURI = String.format(SERVER_BASE_URI, ip, PORT);
-
+        System.out.println("URIIIIIIII : "+serverURI);
         Discovery d = new Discovery(DISCOVERY_ADDR, SERVICE_NAME, serverURI);
         d.start();
         Endpoint.publish(serverURI.replace(ip, "0.0.0.0"), new SoapUsersWebService(d));

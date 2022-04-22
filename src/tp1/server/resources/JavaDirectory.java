@@ -37,7 +37,6 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         this.d = d;
         directory = new ConcurrentHashMap<>();
-        this.d.listener();
         sv = new ServerCapacityManager("files", d);
     }
 
@@ -261,11 +260,12 @@ public class JavaDirectory extends RestServerResource implements Directory {
     @Override
     public Result<Void> deleteUser(String userId, String password) {
         //TODO encontrar melho solucao para lidar com os ficheiros partilhados
+        System.out.println("ENTREI NO DELETE USER");
 
         List<FileInfo> userFiles = directory.get(userId);
         for(FileInfo f : userFiles){
-            //TODO make this tring pretty
             URI fileServerURI = URI.create(f.getFileURL().replace("/files/" + f.getOwner()+ "."+f.getFilename(), ""));
+            System.out.println(fileServerURI.toString());
             Files files = ClientFactory.getFilesClient(fileServerURI);
             files.deleteFile(f.getOwner()+ "."+f.getFilename(), "");
 

@@ -22,7 +22,6 @@ public class ClientFactory {
             try {
                 return new SoapUsersClient( serverURI );
             } catch (MalformedURLException e) {
-                System.out.println("URI ERROR");
                 return null;
             }
         }
@@ -41,14 +40,12 @@ public class ClientFactory {
     }
 
     public static Directory getDirectoryClient(URI serverURI ) {
+        System.out.println( "Inside Get Directory CLient"+ serverURI);
         if( serverURI.toString().endsWith("rest"))
             return new RestDirectoryClient( serverURI );
         else {
-            try {
-                return new SoapDirectoryClient( serverURI );
-            } catch (MalformedURLException e) {
-                return null;
-            }
+            System.out.println("Inside Soap no get DIrectoryClient");
+            return new SoapDirectoryClient( serverURI );
         }
     }
 }

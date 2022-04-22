@@ -21,7 +21,7 @@ public class SoapFileClient extends SoapClient implements Files {
 
     public SoapFileClient(URI serverURI) throws MalformedURLException {
         super( serverURI );
-        QName qname = new QName(SoapUsers.NAMESPACE, SoapUsers.NAME);
+        QName qname = new QName(SoapFiles.NAMESPACE, SoapFiles.NAME);
         Service service = Service.create( URI.create(serverURI + "?wsdl").toURL(), qname);
         this.files = service.getPort(SoapFiles.class);
 

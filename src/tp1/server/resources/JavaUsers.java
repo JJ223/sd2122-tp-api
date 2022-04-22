@@ -1,5 +1,6 @@
 package tp1.server.resources;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,9 +13,9 @@ import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
 import tp1.clients.ClientFactory;
 import tp1.clients.rest.RestDirectoryClient;
+import tp1.clients.soap.SoapDirectoryClient;
 import tp1.server.rest.Discovery;
 
-@Singleton
 public class JavaUsers implements Users{
 
     private final Map<String,User> users = new ConcurrentHashMap<>();
@@ -22,6 +23,7 @@ public class JavaUsers implements Users{
     private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
     private Discovery d;
+
     public JavaUsers( Discovery d) {
         this.d = d;
     }
@@ -109,12 +111,16 @@ public class JavaUsers implements Users{
 
     public Result<User> deleteUser(String userId, String password) {
         Log.info("deleteUser : user = " + userId + "; pwd = " + password);
-        //TODO DElete user files from system\
+
 
         URI[] directoryURI = d.knownUrisOf("directory");
+        System.out.println(" JAVA USers DIRECTORY URI: "+directoryURI[0]);
         Directory directory = ClientFactory.getDirectoryClient(directoryURI[0]);
-        directory.deleteUser(userId,password);
-
+        System.out.println(" JAVA USers After Factory " + directory);
+        Result<Void> r = directory.deleteUser(userId, password);
+        System.out.println(" JAVA USers After delete User " + r.isOK());
+        if (!r.isOK())
+            return Result.error(r.error());
 
         Result<User> result = getUser(userId, password);
 

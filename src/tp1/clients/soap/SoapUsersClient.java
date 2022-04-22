@@ -4,6 +4,7 @@ import com.sun.xml.ws.client.BindingProviderProperties;
 import jakarta.ws.rs.core.Response;
 import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.Service;
+import jakarta.xml.ws.WebServiceException;
 import tp1.api.User;
 import tp1.api.service.soap.SoapUsers;
 import tp1.api.service.soap.UsersException;
@@ -21,9 +22,9 @@ public class SoapUsersClient extends SoapClient implements Users {
     private SoapUsers users;
 
     public SoapUsersClient(URI serverURI) throws MalformedURLException {
-        super( serverURI );
+        super(serverURI);
         QName qname = new QName(SoapUsers.NAMESPACE, SoapUsers.NAME);
-        Service service = Service.create( URI.create(serverURI + "?wsdl").toURL(), qname);
+        Service service = Service.create( URI.create(serverURI+ "?wsdl").toURL(), qname);
         this.users = service.getPort(SoapUsers.class);
 
         ((BindingProvider) users).getRequestContext().put(BindingProviderProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);

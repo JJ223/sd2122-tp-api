@@ -15,7 +15,7 @@ public class SoapFilesServer {
     public static final int PORT = 8080;
     public static final String SERVICE_NAME = "files";
     public static String SERVER_BASE_URI = "http://%s:%s/soap";
-    private static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("226.226.226.226", 2266);
+    private static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("227.227.227.227", 2277);
 
     private static Logger Log = Logger.getLogger(SoapFilesServer.class.getName());
 

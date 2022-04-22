@@ -14,11 +14,10 @@ import java.util.List;
 @WebService(serviceName= SoapUsers.NAME, targetNamespace=SoapUsers.NAMESPACE, endpointInterface=SoapUsers.INTERFACE)
 public class SoapUsersWebService implements SoapUsers {
 
-    final Users impl;
+    private final Users impl;
 
     public SoapUsersWebService(Discovery d){
-        d.listener();
-        impl= new JavaUsers(d);
+        impl = new JavaUsers(d);
     }
 
     @Override

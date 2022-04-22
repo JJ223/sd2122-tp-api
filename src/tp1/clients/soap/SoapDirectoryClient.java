@@ -13,20 +13,46 @@ import tp1.clients.rest.Client;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 public class SoapDirectoryClient extends SoapClient implements Directory {
 
+    private QName qname;
+    private Service service;
     private SoapDirectory directory;
 
-    public SoapDirectoryClient(URI serverURI) throws MalformedURLException {
+    public SoapDirectoryClient(URI serverURI) {
         super( serverURI );
-        QName qname = new QName(SoapUsers.NAMESPACE, SoapUsers.NAME);
-        Service service = Service.create( URI.create(serverURI + "?wsdl").toURL(), qname);
+        System.out.println("SoapDIrectoryCLient");
+        this.qname = new QName(SoapDirectory.NAMESPACE, SoapDirectory.NAME);
+        System.out.println("qname Passed" +serverURI.toString());
+        System.out.println("URI:CREATE: "+URI.create(serverURI + "?wsdl"));
+        System.out.println("TO URLS: "+makeURI(serverURI));
+        System.out.println("After TO URLs");
+        URL url = makeURI(serverURI);
+        System.out.println("After MAKe URL: "+ url);
+        System.out.println("QName"+ qname.toString());
+        this.service = Service.create(url, qname);
+        System.out.println("service Passed");
         this.directory = service.getPort(SoapDirectory.class);
+        System.out.println("directoru Passed");
 
         ((BindingProvider) directory).getRequestContext().put(BindingProviderProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
         ((BindingProvider) directory).getRequestContext().put(BindingProviderProperties.REQUEST_TIMEOUT, READ_TIMEOUT);
+        System.out.println("END SoapDIrectoryCLient");
+
+    }
+
+    private URL makeURI(URI serverURI){
+        try {
+            System.out.println("URLFROMURI: "+serverURI);
+            return URI.create(serverURI + "?wsdl").toURL();
+        } catch (MalformedURLException e) {
+            System.out.println("URL ERROR");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -100,6 +126,7 @@ public class SoapDirectoryClient extends SoapClient implements Directory {
 
     @Override
     public Result<Void> deleteUser(String userId, String password) {
+        System.out.println("Soap DIrectory CLient");
         return super.reTry( () -> {
             try {
                 directory.deleteUser( userId, password);

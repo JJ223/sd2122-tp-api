@@ -20,7 +20,6 @@ public class SoapDirectoryWebService implements SoapDirectory {
     final Directory impl;
 
     public SoapDirectoryWebService( Discovery d){
-        d.listener();
         impl = new JavaDirectory(d);
     }
 
@@ -74,7 +73,8 @@ public class SoapDirectoryWebService implements SoapDirectory {
 
     @Override
     public void deleteUser(String userId, String password) throws DirectoryException {
-        var result = impl.lsFile( userId, password );
+        System.out.println("DENTRO DO DIRECTORY WEBSERVICE");
+        var result = impl.deleteUser( userId, password );
         if( !result.isOK() )
             throw new DirectoryException(result.error().toString());
     }

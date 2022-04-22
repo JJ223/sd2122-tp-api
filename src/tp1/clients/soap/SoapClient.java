@@ -27,6 +27,7 @@ public class SoapClient {
     final ClientConfig config;
 
     protected SoapClient(URI serverURI) {
+        System.out.println("SOAP CLIENT");
         this.serverURI = serverURI;
         this.config = new ClientConfig();
 
