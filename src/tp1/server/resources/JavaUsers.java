@@ -52,7 +52,6 @@ public class JavaUsers implements Users{
 
     public Result<User> getUser(String userId, String password) {
         Log.info("getUser : user = " + userId + "; pwd = " + password);
-        System.out.println("UserID: "+userId+"Password: "+ password);
 
         User user = users.get(userId);
 

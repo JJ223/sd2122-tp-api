@@ -6,6 +6,7 @@ import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.Service;
 import jakarta.xml.ws.WebServiceException;
 import tp1.api.User;
+import tp1.api.service.soap.SoapFiles;
 import tp1.api.service.soap.SoapUsers;
 import tp1.api.service.soap.UsersException;
 import tp1.api.service.util.Result;
@@ -23,7 +24,7 @@ public class SoapUsersClient extends SoapClient implements Users {
     private SoapUsers users;
 
     public SoapUsersClient(URI serverURI) {
-        super(serverURI);
+        super( serverURI );
         QName qname = new QName(SoapUsers.NAMESPACE, SoapUsers.NAME);
         Service service = Service.create( makeURI(serverURI), qname);
         this.users = service.getPort(SoapUsers.class);
@@ -34,11 +35,8 @@ public class SoapUsersClient extends SoapClient implements Users {
 
     private URL makeURI(URI serverURI){
         try {
-            System.out.println("URLFROMURI: "+serverURI);
             return URI.create(serverURI + "?wsdl").toURL();
         } catch (MalformedURLException e) {
-            System.out.println("URL ERROR");
-            //e.printStackTrace();
             return null;
         }
     }

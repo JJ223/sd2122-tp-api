@@ -38,11 +38,8 @@ public class SoapDirectoryClient extends SoapClient implements Directory {
 
     private URL makeURI(URI serverURI){
         try {
-            System.out.println("URLFROMURI: "+serverURI);
             return URI.create(serverURI + "?wsdl").toURL();
         } catch (MalformedURLException e) {
-            System.out.println("URL ERROR");
-            //e.printStackTrace();
             return null;
         }
     }

@@ -44,9 +44,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     public Result<FileInfo> writeFile(String filename, byte[] data, String userId, String password) {
         //user server
         URI[] userURI = d.knownUrisOf("users");
-        System.out.println("BEFORE USERS: "+userURI[0]);
         Users users = ClientFactory.getUsersClient(userURI[0]);
-        System.out.println("AFTER USERS");
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
