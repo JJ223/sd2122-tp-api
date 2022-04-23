@@ -18,6 +18,9 @@ public class RestDirectoryClient extends Client implements Directory {
 
     final WebTarget target;
 
+    private static final String FILE_ID = "%s.%s";
+    private static final String SHARE_FILE = "%s.%s";
+
     public RestDirectoryClient( URI serverURI ) {
         super( serverURI );
         target = client.target( serverURI ).path( RestDirectory.PATH );
@@ -87,7 +90,7 @@ public class RestDirectoryClient extends Client implements Directory {
 
     private Result<FileInfo> clt_writeFile( String filename, byte[] data, String userId, String password) {
 
-        Response r = target.path(String.format("%s.%s", userId, filename))
+        Response r = target.path(String.format(FILE_ID, userId, filename))
         		.queryParam(RestUsers.PASSWORD, password)
                 .request()
                 .accept(MediaType.APPLICATION_JSON)
@@ -101,7 +104,7 @@ public class RestDirectoryClient extends Client implements Directory {
     
     private Result<Void> clt_deleteFile(String filename, String userId, String password) {
 
-        Response r = target.path(String.format("%s.%s", userId, filename))
+        Response r = target.path(String.format(FILE_ID, userId, filename))
         		 .queryParam(RestUsers.PASSWORD, password)
                  .request()
                  .delete();
@@ -114,7 +117,7 @@ public class RestDirectoryClient extends Client implements Directory {
     }
     
     private Result<Void> clt_shareFile(String filename, String userId, String userIdShare, String password) {
-    	Response r = target.path(String.format("%s.%s/share/%s", userId, filename, userIdShare))
+    	Response r = target.path(String.format(SHARE_FILE, userId, filename, userIdShare))
        		 	.queryParam(RestUsers.PASSWORD, password)
                 .request()
                 .post(Entity.entity(String.class,  MediaType.APPLICATION_JSON));
@@ -125,7 +128,7 @@ public class RestDirectoryClient extends Client implements Directory {
     }
     
     private Result<Void> clt_unshareFile(String filename, String userId, String userIdShare, String password) {
-    	Response r = target.path(String.format("%s.%s/share/%s", userId, filename, userIdShare))
+    	Response r = target.path(String.format(SHARE_FILE, userId, filename, userIdShare))
        		 	.queryParam(RestUsers.PASSWORD, password)
                 .request()
                 .delete();
@@ -138,7 +141,7 @@ public class RestDirectoryClient extends Client implements Directory {
     
     private Result<byte[]> clt_getFile(String filename, String userId, String accUserId, String password) {
 
-        Response r = target.path(String.format("%s.%s", userId, filename))
+        Response r = target.path(String.format(FILE_ID, userId, filename))
         		 .queryParam(RestUsers.USER_ID, accUserId)
         		 .queryParam(RestUsers.PASSWORD, password)
                  .request()
@@ -152,7 +155,7 @@ public class RestDirectoryClient extends Client implements Directory {
     }
     
     private Result<List<FileInfo>> clt_listFiles(String userId, String password) {
-    	Response r = target.path(String.format("%s", userId))
+    	Response r = target.path(userId)
        		 .queryParam(RestUsers.PASSWORD, password)
                 .request()
                 .accept(MediaType.APPLICATION_JSON)

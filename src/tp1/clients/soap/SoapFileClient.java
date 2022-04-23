@@ -32,7 +32,7 @@ public class SoapFileClient extends SoapClient implements Files {
 
     private URL makeURI(URI serverURI){
         try {
-            return URI.create(serverURI + "?wsdl").toURL();
+            return URI.create(serverURI + WSDL).toURL();
         } catch (MalformedURLException e) {
             return null;
         }

@@ -41,7 +41,6 @@ public class Client {
 				return func.get();
 			} catch (ProcessingException x) {
 				Log.fine("ProcessingException: " + x.getMessage());
-				System.out.println("Todo lá dentro: " + i);
 				sleep(RETRY_SLEEP);
 			} catch (Exception x) {
 				Log.fine("Exception: " + x.getMessage());
@@ -49,7 +48,6 @@ public class Client {
 				break;
 			}
 		}
-		System.out.println("TIMEEEEEEOUUUUUUUUTTTTTTT");
 		return (T) Result.error(Result.ErrorCode.TIMEOUT);
 	}
 

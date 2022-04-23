@@ -1,6 +1,5 @@
 package tp1.clients.soap;
 
-import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
@@ -22,6 +21,8 @@ public class SoapClient {
 
     protected static final int RETRY_SLEEP = 1000;
     protected static final int MAX_RETRIES = 3;
+
+    protected static String WSDL = "?wsdl";
 
     final URI serverURI;
     protected final jakarta.ws.rs.client.Client client;
@@ -46,7 +47,6 @@ public class SoapClient {
                 sleep(RETRY_SLEEP);
             } catch (Exception x) {
                 Log.fine("Exception: " + x.getMessage());
-                x.printStackTrace();
                 sleep(RETRY_SLEEP);
             }
         return (T) Result.error(Result.ErrorCode.TIMEOUT);

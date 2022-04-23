@@ -14,6 +14,7 @@ import java.net.URI;
 public class RestFileClient extends Client implements Files {
 
     final WebTarget target;
+    private static final String TOKEN = "token";
 
     public RestFileClient(URI serverURI) {
         super( serverURI );
@@ -44,7 +45,7 @@ public class RestFileClient extends Client implements Files {
     private Result<Void> clt_writeFile( String fileId, byte[] data, String token) {
 
         Response r = target.path(fileId)
-        		.queryParam("token", token)
+        		.queryParam(TOKEN, token)
                 .request()
                 .post(Entity.entity(data, MediaType.APPLICATION_OCTET_STREAM));
 
@@ -57,7 +58,7 @@ public class RestFileClient extends Client implements Files {
     private Result<Void> clt_deleteFile( String fileId, String token) {
 
         Response r = target.path(fileId)
-        			.queryParam("token", token)
+        			.queryParam(TOKEN, token)
                 	.request()
                 	.delete();
 
@@ -70,7 +71,7 @@ public class RestFileClient extends Client implements Files {
     private Result<byte[]> clt_getFile( String fileId, String token) {
 
         Response r = target.path(fileId)
-        		.queryParam("token", token)
+        		.queryParam(TOKEN, token)
                 .request()
                 .accept(MediaType.APPLICATION_OCTET_STREAM)
                 .get();
