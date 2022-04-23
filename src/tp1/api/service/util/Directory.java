@@ -121,6 +121,6 @@ public interface Directory {
 	 * @param userId - id of the user.
 	 * @param password - the password of the user.
 	 */
-	Result<Void> deleteUser(String userId, String password);
+	Result<Void> deleteUserFiles(String userId, String password);
 
 }

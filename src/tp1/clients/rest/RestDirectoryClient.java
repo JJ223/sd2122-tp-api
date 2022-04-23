@@ -66,14 +66,14 @@ public class RestDirectoryClient extends Client implements Directory {
     }
 
     @Override
-    public Result<Void> deleteUser(String userId, String password) {
+    public Result<Void> deleteUserFiles(String userId, String password) {
         return super.reTry( () -> {
-             return clt_deleteUser( userId, password);
+             return clt_deleteUserFiles( userId, password);
         });
 
     }
 
-    private Result<Void> clt_deleteUser(String userId, String password){
+    private Result<Void> clt_deleteUserFiles(String userId, String password){
         Response r = target.path(userId)
                 .queryParam(RestUsers.PASSWORD, password)
                 .request()

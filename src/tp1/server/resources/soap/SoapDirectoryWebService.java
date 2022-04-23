@@ -72,9 +72,8 @@ public class SoapDirectoryWebService implements SoapDirectory {
     }
 
     @Override
-    public void deleteUser(String userId, String password) throws DirectoryException {
-        System.out.println("DENTRO DO DIRECTORY WEBSERVICE");
-        var result = impl.deleteUser( userId, password );
+    public void deleteUserFiles(String userId, String password) throws DirectoryException {
+        var result = impl.deleteUserFiles( userId, password );
         if( !result.isOK() )
             throw new DirectoryException(result.error().toString());
     }

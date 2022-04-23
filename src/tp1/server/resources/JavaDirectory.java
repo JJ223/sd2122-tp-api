@@ -120,6 +120,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
             if(fileInfo!=null) {
 
                 URI fileServerURI = URI.create(fileInfo.getFileURL().replace("/files/" + filedId, ""));
+                System.out.println("URI: "+fileServerURI);
                 Files files = ClientFactory.getFilesClient(fileServerURI);
                 files.deleteFile(filedId, "");
                 List<FileInfo> l = directory.get(userId);
@@ -260,9 +261,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
     }
 
     @Override
-    public Result<Void> deleteUser(String userId, String password) {
-        //TODO encontrar melho solucao para lidar com os ficheiros partilhados
-        System.out.println("ENTREI NO DELETE USER");
+    public Result<Void> deleteUserFiles(String userId, String password) {
 
         List<FileInfo> userFiles = directory.get(userId);
         if(userFiles != null){

@@ -76,8 +76,8 @@ public class RestDirectoryResource extends RestServerResource implements RestDir
     }
 
     @Override
-    public void deleteUser(String userId, String password) {
-        var result = impl.deleteUser( userId, password );
+    public void deleteUserFiles(String userId, String password) {
+        var result = impl.deleteUserFiles( userId, password );
         if( !result.isOK() )
             getErrorException(result.error());
     }

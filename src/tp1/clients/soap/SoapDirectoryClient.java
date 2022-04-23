@@ -117,11 +117,10 @@ public class SoapDirectoryClient extends SoapClient implements Directory {
     }
 
     @Override
-    public Result<Void> deleteUser(String userId, String password) {
-        System.out.println("Soap DIrectory CLient");
+    public Result<Void> deleteUserFiles(String userId, String password) {
         return super.reTry( () -> {
             try {
-                directory.deleteUser( userId, password);
+                directory.deleteUserFiles( userId, password);
                 return Result.ok();
             } catch (DirectoryException e) {
                 return getResultError(Response.Status.valueOf(e.getMessage()));
