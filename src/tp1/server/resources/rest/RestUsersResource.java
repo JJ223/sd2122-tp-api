@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.WebApplicationException;
 import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Users;
@@ -26,8 +27,7 @@ public class RestUsersResource extends RestServerResource implements RestUsers {
 		if( result.isOK() )
 			return result.value();
         else
-			getErrorException(result.error()) ;
-		return null;
+			throw new WebApplicationException(getErrorException(result.error()));
 	}
 
 	@Override
@@ -36,8 +36,7 @@ public class RestUsersResource extends RestServerResource implements RestUsers {
 		if( result.isOK() )
 			return result.value();
 		else
-			getErrorException(result.error()) ;
-		return null;
+			throw new WebApplicationException(getErrorException(result.error()));
 	}
 
 	@Override
@@ -46,8 +45,7 @@ public class RestUsersResource extends RestServerResource implements RestUsers {
 		if( result.isOK() )
 			return result.value();
 		else
-			getErrorException(result.error()) ;
-		return null;
+			throw new WebApplicationException(getErrorException(result.error()));
 	}
 
 	@Override
@@ -56,8 +54,7 @@ public class RestUsersResource extends RestServerResource implements RestUsers {
 		if( result.isOK() ) {
 			return result.value();
 		}else
-			getErrorException(result.error()) ;
-		return null;
+			throw new WebApplicationException(getErrorException(result.error()));
 	}
 
 	@Override
@@ -66,8 +63,7 @@ public class RestUsersResource extends RestServerResource implements RestUsers {
 		if( result.isOK() )
 			return result.value();
 		else
-			getErrorException(result.error()) ;
-		return null;
+			throw new WebApplicationException(getErrorException(result.error()));
 	}
 
 	@Override
@@ -76,7 +72,6 @@ public class RestUsersResource extends RestServerResource implements RestUsers {
 		if( result.isOK() )
 			return result.value();
 		else
-			getErrorException(result.error()) ;
-		return false;
+			throw new WebApplicationException(getErrorException(result.error()));
 	}
 }

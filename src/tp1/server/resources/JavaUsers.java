@@ -66,7 +66,7 @@ public class JavaUsers implements Users{
 
         // Check if user is valid
         if(userId == null || password == null) {
-            Log.info("UserId or passwrod null.");
+            Log.info("UserId or password null.");
             return Result.error(Result.ErrorCode.BAD_REQUEST );
         }
 
