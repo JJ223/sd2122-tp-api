@@ -47,7 +47,7 @@ public class Client {
 				x.printStackTrace();
 				break;
 			}
-		return null;
+		return (T) Result.error(Result.ErrorCode.TIMEOUT);
 	}
 
 	private void sleep(int ms) {

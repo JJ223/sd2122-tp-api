@@ -48,7 +48,7 @@ public class SoapDirectoryWebService implements SoapDirectory {
 
     @Override
     public void unshareFile(String filename, String userId, String userIdShare, String password) throws DirectoryException {
-        var result = impl.shareFile( filename, userId, userIdShare, password );
+        var result = impl.unshareFile( filename, userId, userIdShare, password );
         if( !result.isOK() )
             throw new DirectoryException(result.error().toString());
     }

@@ -49,7 +49,7 @@ public class SoapClient {
                 x.printStackTrace();
                 sleep(RETRY_SLEEP);
             }
-        return (T) Result.error(Result.ErrorCode.CONFLICT);
+        return (T) Result.error(Result.ErrorCode.TIMEOUT);
     }
 
     private void sleep(int ms) {
