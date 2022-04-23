@@ -1,20 +1,17 @@
 package tp1.server.resources;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import jakarta.inject.Singleton;
 import tp1.api.User;
 import tp1.api.service.util.Directory;
 import tp1.api.service.util.Result;
 import tp1.api.service.util.Users;
 import tp1.clients.ClientFactory;
-import tp1.clients.rest.RestDirectoryClient;
-import tp1.clients.soap.SoapDirectoryClient;
 import tp1.server.rest.Discovery;
+import tp1.server.soap.SoapDirectoryServer;
 
 public class JavaUsers implements Users{
 
@@ -113,7 +110,7 @@ public class JavaUsers implements Users{
         Log.info("deleteUser : user = " + userId + "; pwd = " + password);
 
 
-        URI[] directoryURI = d.knownUrisOf("directory");
+        URI[] directoryURI = d.knownUrisOf(SoapDirectoryServer.SERVICE_NAME);
         Directory directory = ClientFactory.getDirectoryClient(directoryURI[0]);
         Result<Void> r = directory.deleteUserFiles(userId, password);
 

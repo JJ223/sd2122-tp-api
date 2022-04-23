@@ -1,27 +1,20 @@
 package tp1.server.resources.rest;
 
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 import tp1.api.FileInfo;
 import tp1.api.service.rest.RestDirectory;
 import tp1.api.service.util.Directory;
-import tp1.api.service.util.Result;
 import tp1.server.resources.JavaDirectory;
 import tp1.server.rest.Discovery;
 
 import java.util.*;
-import java.util.logging.Logger;
 
-public class RestDirectoryResource implements RestDirectory {
+public class RestDirectoryResource extends RestServerResource implements RestDirectory {
 
-    private Discovery d;
-
-    private static Logger Log = Logger.getLogger(RestDirectoryResource.class.getName());
 
     final Directory impl;
 
     public RestDirectoryResource(Discovery d) {
-        this.d = d;
         d.listener();
         impl = new JavaDirectory(d);
     }
@@ -80,25 +73,6 @@ public class RestDirectoryResource implements RestDirectory {
         var result = impl.deleteUserFiles( userId, password );
         if( !result.isOK() )
             throw new WebApplicationException(getErrorException(result.error()));
-    }
-
-    private Response.Status getErrorException(Result.ErrorCode err) throws WebApplicationException{
-        switch(err) {
-            case CONFLICT:
-                return Response.Status.CONFLICT;
-            case NOT_FOUND:
-                return Response.Status.NOT_FOUND;
-            case BAD_REQUEST:
-                return Response.Status.BAD_REQUEST;
-            case FORBIDDEN:
-                return Response.Status.FORBIDDEN;
-            case INTERNAL_ERROR:
-                return Response.Status.INTERNAL_SERVER_ERROR;
-            case NOT_IMPLEMENTED:
-                return Response.Status.NOT_IMPLEMENTED;
-            default:
-                return Response.Status.BAD_REQUEST;
-        }
     }
 
 }

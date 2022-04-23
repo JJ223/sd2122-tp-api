@@ -5,12 +5,7 @@ import tp1.api.service.util.Files;
 import tp1.server.resources.JavaFiles;
 import tp1.server.rest.Discovery;
 
-
-import java.util.logging.Logger;
-
 public class RestFilesResource extends RestServerResource implements RestFiles {
-
-    private static Logger Log = Logger.getLogger(RestFilesResource.class.getName());
 
     final Files impl = new JavaFiles();
 
