@@ -48,7 +48,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
-            getErrorException(res.error());
+            return Result.error(res.error());
 
         String filedId = String.format("%s.%s", userId, filename);
 
@@ -143,11 +143,11 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
-            getErrorException(res.error());
+            return Result.error(res.error());
 
         Result<Boolean> res2 = users.userExists(userIdShare);
         if(!res2.isOK())
-            getErrorException(res2.error());
+            return Result.error(res.error());
 
         FileInfo fI = getFileInfoUser(userId, filename);
         if(fI == null) {
@@ -171,11 +171,11 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
-            getErrorException(res.error());
+            return Result.error(res.error());
 
         Result<Boolean> res2 = users.userExists(userIdShare);
         if(!res2.isOK())
-            getErrorException(res2.error());
+            return Result.error(res.error());
 
         FileInfo fI = getFileInfoUser(userId, filename);
         if(fI == null) {
@@ -200,11 +200,11 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<User> res = users.getUser(accUserId, password);
         if(!res.isOK())
-            getErrorException(res.error());
+            return Result.error(res.error());
 
         Result<Boolean> res2 = users.userExists(userId);
         if(!res2.isOK())
-            getErrorException(res2.error());
+            return Result.error(res.error());
 
         if(!directory.containsKey(userId)) {
             Log.info("User with userid does not have files.");
@@ -243,7 +243,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<User> res = users.getUser(userId, password);
         if(!res.isOK())
-            getErrorException(res.error());
+            return Result.error(res.error());
 
         List<FileInfo> sharedFiles = new LinkedList<FileInfo>();
 
