@@ -1,6 +1,5 @@
 package tp1.server.resources.rest;
 
-import tp1.server.resources.rest.Entry;
 import tp1.server.rest.Discovery;
 
 import java.net.URI;
@@ -27,7 +26,7 @@ public class ServerCapacityManager {
     }
 
     public void updateCapacity(URI uri, int num){
-        for( Entry e : servers){
+        for( Entry<URI, Integer> e : servers){
             if(e.getURI().equals(uri))
                 e.updateNumFiles(num);
         }

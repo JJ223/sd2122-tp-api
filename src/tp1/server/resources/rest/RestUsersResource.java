@@ -1,6 +1,5 @@
 package tp1.server.resources.rest;
 
-import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -8,7 +7,6 @@ import jakarta.inject.Singleton;
 import tp1.api.User;
 import tp1.api.service.rest.RestUsers;
 import tp1.api.service.util.Users;
-import tp1.clients.rest.RestDirectoryClient;
 import tp1.server.resources.JavaUsers;
 import tp1.server.rest.Discovery;
 
@@ -16,13 +14,8 @@ import tp1.server.rest.Discovery;
 public class RestUsersResource extends RestServerResource implements RestUsers {
 
 	final Users impl;
-
-	private Discovery d;
-
-	private static Logger Log = Logger.getLogger(RestUsersResource.class.getName());
-
+	
 	public RestUsersResource(Discovery d) {
-		this.d = d;
 		d.listener();
 		impl = new JavaUsers(d);
 	}
