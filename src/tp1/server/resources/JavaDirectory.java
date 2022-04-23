@@ -107,8 +107,9 @@ public class JavaDirectory extends RestServerResource implements Directory {
         Users users = ClientFactory.getUsersClient(userURI[0]);
 
         Result<User> res = users.getUser(userId, password);
-        if(!res.isOK())
-            getErrorException(res.error());
+        if(!res.isOK()) {
+            return Result.error(res.error());
+        }
 
         String filedId = String.format("%s.%s", userId, filename);
 
