@@ -36,17 +36,20 @@ public class Client {
 	}
 
 	protected <T> T reTry(Supplier<T> func) {
-		for (int i = 0; i < MAX_RETRIES; i++)
+		for (int i = 0; i < MAX_RETRIES; i++) {
 			try {
 				return func.get();
 			} catch (ProcessingException x) {
 				Log.fine("ProcessingException: " + x.getMessage());
+				System.out.println("Todo lá dentro: " + i);
 				sleep(RETRY_SLEEP);
 			} catch (Exception x) {
 				Log.fine("Exception: " + x.getMessage());
 				x.printStackTrace();
 				break;
 			}
+		}
+		System.out.println("TIMEEEEEEOUUUUUUUUTTTTTTT");
 		return (T) Result.error(Result.ErrorCode.TIMEOUT);
 	}
 

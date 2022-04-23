@@ -53,7 +53,9 @@ public class RestUsersClient extends Client implements Users {
 
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
-		return super.reTry( () -> clt_searchUsers( pattern ));
+		return super.reTry( () ->{
+			return clt_searchUsers( pattern );
+		});
 	}
 
 	@Override

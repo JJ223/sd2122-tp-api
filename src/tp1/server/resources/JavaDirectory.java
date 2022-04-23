@@ -32,13 +32,13 @@ public class JavaDirectory extends RestServerResource implements Directory {
     private Discovery d;
     private Map<String, List<FileInfo>> directory;
     private ServerCapacityManager sv;
-    private Users users = null;
+    private Users users;
 
     public JavaDirectory(Discovery d) {
-
         this.d = d;
         directory = new ConcurrentHashMap<>();
         sv = new ServerCapacityManager("files", d);
+        users = null;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<Boolean> res2 = users.userExists(userIdShare);
         if(!res2.isOK())
-            return Result.error(res.error());
+            return Result.error(res2.error());
 
         FileInfo fI = getFileInfoUser(userId, filename);
         if(fI == null) {
@@ -184,7 +184,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<Boolean> res2 = users.userExists(userIdShare);
         if(!res2.isOK())
-            return Result.error(res.error());
+            return Result.error(res2.error());
 
         FileInfo fI = getFileInfoUser(userId, filename);
         if(fI == null) {
@@ -214,7 +214,7 @@ public class JavaDirectory extends RestServerResource implements Directory {
 
         Result<Boolean> res2 = users.userExists(userId);
         if(!res2.isOK())
-            return Result.error(res.error());
+            return Result.error(res2.error());
 
         if(!directory.containsKey(userId)) {
             Log.info("User with userid does not have files.");
