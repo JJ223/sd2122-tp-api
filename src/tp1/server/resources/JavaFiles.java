@@ -17,7 +17,7 @@ public class JavaFiles implements Files {
     }
 
     @Override
-    public Result<Void> writeFile(String fileId, byte[] data, String token) {
+    public synchronized Result<Void> writeFile(String fileId, byte[] data, String token) {
         Log.info("writeFile : " + fileId);
 
         // Check if file data is valid
@@ -39,7 +39,7 @@ public class JavaFiles implements Files {
     }
 
     @Override
-    public Result<Void> deleteFile(String fileId, String token) {
+    public synchronized Result<Void> deleteFile(String fileId, String token) {
         Log.info("deleteFile : " + fileId);
 
         // Check if file data is valid
@@ -59,7 +59,7 @@ public class JavaFiles implements Files {
     }
 
     @Override
-    public Result<byte[]> getFile(String fileId, String token) {
+    public synchronized Result<byte[]> getFile(String fileId, String token) {
         Log.info("getFile : " + fileId);
 
         // Check if file data is valid

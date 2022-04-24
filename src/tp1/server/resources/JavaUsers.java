@@ -109,6 +109,12 @@ public class JavaUsers implements Users{
     public Result<User> deleteUser(String userId, String password) {
         Log.info("deleteUser : user = " + userId + "; pwd = " + password);
 
+        Result<User> result = getUser(userId, password);
+
+        if(!result.isOK())
+            return result;
+
+        users.remove(userId);
 
         URI[] directoryURI = d.knownUrisOf(SoapDirectoryServer.SERVICE_NAME);
         Directory directory = ClientFactory.getDirectoryClient(directoryURI[0]);
@@ -116,13 +122,6 @@ public class JavaUsers implements Users{
 
         if (!r.isOK())
             return Result.error(r.error());
-
-        Result<User> result = getUser(userId, password);
-
-        if(!result.isOK())
-            return result;
-
-        users.remove(userId);
 
         return result;
     }

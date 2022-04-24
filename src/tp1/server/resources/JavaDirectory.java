@@ -76,12 +76,10 @@ public class JavaDirectory extends RestServerResource implements Directory {
         String fileUrl;
         //choose file server
         synchronized (sv) {
-        Iterator<Entry<URI, Integer>> fileURIs = sv.getServers();
-        URI uri = fileURIs.next().getURI();
-        fileUrl = String.format(FILE_URL, uri.toString(), RestFiles.PATH, userId, filename);
+            Iterator<Entry<URI, Integer>> fileURIs = sv.getServers();
+            URI uri = fileURIs.next().getURI();
+            fileUrl = String.format(FILE_URL, uri.toString(), RestFiles.PATH, userId, filename);
 
-
-            //add file to file server
             try {
                 Files files = ClientFactory.getFilesClient(uri);
                 files.writeFile(fileId, data, "");
